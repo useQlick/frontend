@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "../../components/ui/button";
+import React, { useState, useEffect, useRef } from "react";
+import { Button } from "../components/ui/button";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-export const MacbookAir = (): JSX.Element => {
+export const LandingPage = (): JSX.Element => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const pinRef = useRef<HTMLDivElement>(null);
+  const backgroundRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -11,6 +17,69 @@ export const MacbookAir = (): JSX.Element => {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
+
+  // Animate rectangle-2 background to expand and fill the screen while pinned
+  useGSAP(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const pinEl = pinRef.current;
+    const bgEl = backgroundRef.current;
+    const txtEl = overlayRef.current;
+    if (!pinEl || !bgEl) return;
+
+    // Compute scale required to cover viewport from current size
+    const computeTargetScale = () => {
+      const rect = bgEl.getBoundingClientRect();
+      const scaleX = window.innerWidth / rect.width;
+      const scaleY = window.innerHeight / rect.height;
+      // Slight overshoot to ensure full coverage without edges
+      return Math.max(scaleX, scaleY) * 1.08;
+    };
+
+    gsap.set(bgEl, { transformOrigin: "50% 100%" });
+    if (txtEl) gsap.set(txtEl, { opacity: 0 });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: pinEl,
+        start: "top bottom",
+        end: "+=160%",
+        scrub: true,
+        pin: true,
+        anticipatePin: 1,
+      },
+    });
+
+    tl.to(bgEl, { scale: computeTargetScale(), ease: "none", duration: 1 }, 0);
+    if (txtEl) {
+      tl.fromTo(
+        txtEl,
+        { opacity: 0 },
+        { opacity: 1, ease: "none", duration: 0.2 },
+        0.8
+      );
+    }
+
+    const onResize = () => {
+      const target = computeTargetScale();
+      tl.clear();
+      tl.to(bgEl, { scale: target, ease: "none", duration: 1 }, 0);
+      if (txtEl) {
+        tl.fromTo(
+          txtEl,
+          { opacity: 0 },
+          { opacity: 1, ease: "none", duration: 0.2 },
+          0.8
+        );
+      }
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener("resize", onResize);
+    return () => {
+      window.removeEventListener("resize", onResize);
+      ScrollTrigger.getAll().forEach((st) => st.kill());
+    };
   }, []);
 
   const calculateEyePosition = (eyeCenterX: number, eyeCenterY: number) => {
@@ -95,7 +164,7 @@ export const MacbookAir = (): JSX.Element => {
             <div className="text-center lg:text-left mb-8 lg:mb-0">
               <h1 className="font-['Instrument_Serif'] font-normal text-4xl sm:text-6xl lg:text-8xl xl:text-9xl tracking-[0] leading-tight lg:leading-[87.1px] mb-6 lg:mb-8">
                 <span className="text-white block">
-                  Prediction
+                  Quantum
                 </span>
                 <span className="text-[#ff7bc0]">Market</span>
               </h1>
@@ -121,20 +190,20 @@ export const MacbookAir = (): JSX.Element => {
         </div>
       </main>
 
-      {/* Bottom Section with Eyes */}
-      <div className="relative mt-8 lg:mt-16">
+      {/* Bottom Section with Eyes (Pinned Scroll Animation) */}
+      <div ref={pinRef} className="relative mt-8 lg:mt-16">
         {/* Background Shape */}
-        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[1066px] h-[200px] sm:h-[250px] lg:h-[359px]">
-          <img
-            className="w-full h-full object-cover"
-            alt="Background shape"
-            src="/rectangle-2.svg"
-          />
-        </div>
+        <div
+          ref={backgroundRef}
+          className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 w-[966px] h-[600px] sm:h-[250px] lg:h-[359px] will-change-transform bg-[#FF7BC0] rounded-t-[79px]"
+        />
 
         {/* Eyes Container */}
-        <div className="relative z-10 flex justify-center items-end pb-8 lg:pb-16">
-          <div className="flex space-x-4 sm:space-x-8 lg:space-x-16">
+        <div className="absolute -top-96 left-1/2 transform -translate-x-1/2 z-10 flex justify-center items-start pt-8 lg:pt-30">
+          <div
+            className="relative flex space-x-4 sm:space-x-8 lg:space-x-16"
+            style={{ left: "10%" }}
+          >
             {/* Left Eye */}
             <div className="relative">
               <div className="w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-white rounded-full flex items-center justify-center">
@@ -142,14 +211,14 @@ export const MacbookAir = (): JSX.Element => {
                   className="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-black rounded-full transition-transform duration-100 ease-out"
                   style={{
                     transform: `translate(${calculateEyePosition(
-                      window.innerWidth < 640 ? window.innerWidth / 2 - 80 : 
-                      window.innerWidth < 1024 ? window.innerWidth / 2 - 120 : 
-                      window.innerWidth / 2 - 160, 
+                      window.innerWidth < 640 ? window.innerWidth / 2 - 80 :
+                      window.innerWidth < 1024 ? window.innerWidth / 2 - 120 :
+                      window.innerWidth / 2 - 160,
                       window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).x}px, ${calculateEyePosition(
-                      window.innerWidth < 640 ? window.innerWidth / 2 - 80 : 
-                      window.innerWidth < 1024 ? window.innerWidth / 2 - 120 : 
-                      window.innerWidth / 2 - 160, 
+                      window.innerWidth < 640 ? window.innerWidth / 2 - 80 :
+                      window.innerWidth < 1024 ? window.innerWidth / 2 - 120 :
+                      window.innerWidth / 2 - 160,
                       window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).y}px)`
                   }}
@@ -164,14 +233,14 @@ export const MacbookAir = (): JSX.Element => {
                   className="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-black rounded-full transition-transform duration-100 ease-out"
                   style={{
                     transform: `translate(${calculateEyePosition(
-                      window.innerWidth < 640 ? window.innerWidth / 2 + 80 : 
-                      window.innerWidth < 1024 ? window.innerWidth / 2 + 120 : 
-                      window.innerWidth / 2 + 160, 
+                      window.innerWidth < 640 ? window.innerWidth / 2 + 80 :
+                      window.innerWidth < 1024 ? window.innerWidth / 2 + 120 :
+                      window.innerWidth / 2 + 160,
                       window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).x}px, ${calculateEyePosition(
-                      window.innerWidth < 640 ? window.innerWidth / 2 + 80 : 
-                      window.innerWidth < 1024 ? window.innerWidth / 2 + 120 : 
-                      window.innerWidth / 2 + 160, 
+                      window.innerWidth < 640 ? window.innerWidth / 2 + 80 :
+                      window.innerWidth < 1024 ? window.innerWidth / 2 + 120 :
+                      window.innerWidth / 2 + 160,
                       window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).y}px)`
                   }}
@@ -179,6 +248,13 @@ export const MacbookAir = (): JSX.Element => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Overlay Text during pinned animation (bottom aligned, fades in near end) */}
+        <div ref={overlayRef} className="absolute inset-x-0 bottom-4 sm:bottom-8 z-20 flex items-end justify-center pointer-events-none px-6">
+          <p className="font-['Instrument_Sans'] text-white text-sm sm:text-base lg:text-lg text-center max-w-2xl opacity-90">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </p>
         </div>
       </div>
     </div>

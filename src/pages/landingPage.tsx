@@ -132,9 +132,9 @@ export const LandingPage = (): JSX.Element => {
           {/* Logo */}
           <div className="flex-shrink-0">
             <img
-              className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12"
+              className="w-8 h-8 sm:w-10 sm:h-10 lg:w-20 lg:h-20 pt-5"
               alt="Logo"
-              src="/frame.svg"
+              src="/logo(2).svg"
             />
           </div>
 
@@ -183,17 +183,19 @@ export const LandingPage = (): JSX.Element => {
       <main className="relative z-10 px-4 sm:px-6 lg:px-24">
         <div className="max-w-7xl mx-auto">
           {/* Hero Section */}
-          <div className="flex flex-col lg:flex-row items-center justify-between py-8 lg:py-16">
+          <div className="flex flex-col lg:flex-row items-center justify-between py-8 lg:py-8">
             <div className="text-center lg:text-left mb-8 lg:mb-0">
               <h1 className="font-['Instrument_Serif'] font-normal text-4xl sm:text-6xl lg:text-8xl xl:text-9xl tracking-[0] leading-tight lg:leading-[87.1px] mb-6 lg:mb-8">
                 <span className="text-white block">
-                  Quantum
+                  Why pick one market when you can
                 </span>
-                <span className="text-[#ff7bc0]">Market</span>
+                <span className="text-white block">
+                   <span className="text-[#64C967]">Qlick</span> them all?
+                </span>
               </h1>
               
               <div className="lg:hidden">
-                <Button className="px-6 py-3 bg-[#ff7bc0] rounded-[31px] hover:bg-[#ff6bb5] transition-colors">
+                <Button className="px-6 py-3 bg-[#64C967] rounded-[31px] hover:bg-[#50C953] transition-colors">
                   <span className="font-['Instrument_Sans'] font-bold text-black text-sm tracking-[0] leading-normal">
                     Get Started →
                   </span>
@@ -203,7 +205,7 @@ export const LandingPage = (): JSX.Element => {
 
             {/* Desktop CTA */}
             <div className="hidden lg:block">
-              <Button className="px-6 py-3 bg-[#ff7bc0] rounded-[31px] hover:bg-[#ff6bb5] transition-colors">
+              <Button className="px-6 py-3 bg-[#64C967] rounded-[31px] hover:bg-[#50C953] transition-colors">
                 <span className="font-['Instrument_Sans'] font-bold text-black text-sm tracking-[0] leading-normal">
                   Get Started →
                 </span>
@@ -214,15 +216,15 @@ export const LandingPage = (): JSX.Element => {
       </main>
 
       {/* Bottom Section with Eyes (Pinned Scroll Animation) */}
-      <div ref={pinRef} className="relative mt-8 lg:mt-16">
+      <div ref={pinRef} className="relative mt-8 lg:mt-36">
         {/* Background Shape */}
         <div
           ref={backgroundRef}
-          className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 w-[966px] h-[600px] sm:h-[250px] lg:h-[359px] will-change-transform bg-[#FF7BC0] rounded-t-[79px]"
+          className="absolute -bottom-20 left-1/2 transform -translate-x-1/2 w-[966px] h-full max-h-[600px] sm:h-[250px] lg:h-[359px] will-change-transform bg-[#64C967] rounded-t-[79px]"
         />
 
         {/* Eyes Container */}
-        <div ref={eyesRef} className="absolute left-1/2 transform -translate-x-1/2 z-10 flex justify-center items-start pt-8 lg:pt-30">
+        <div ref={eyesRef} className="absolute left-1/2 transform -translate-x-1/2 z-10 flex justify-center items-start pt-4 lg:pt-30">
           <div
             className="relative flex space-x-4 sm:space-x-8 lg:space-x-16"
             style={{ left: "30%" }}

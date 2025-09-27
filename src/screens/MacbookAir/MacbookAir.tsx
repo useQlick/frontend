@@ -133,7 +133,7 @@ export const MacbookAir = (): JSX.Element => {
         </div>
 
         {/* Eyes Container */}
-        <div className="relative z-10 flex justify-center items-end pb-8 lg:pb-16">
+        <div className="p-20 relative z-10 flex justify-center items-end pb-8 lg:pb-16">
           <div className="flex space-x-4 sm:space-x-8 lg:space-x-16">
             {/* Left Eye */}
             <div className="relative">

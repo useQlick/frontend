@@ -1,0 +1,19 @@
+<svg width="47" height="47" viewBox="0 0 47 47" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_7_5)">
+<mask id="mask0_7_5" style="mask-type:luminance" maskUnits="userSpaceOnUse" x="0" y="0" width="47" height="47">
+<path d="M0 0H47V47H0V0Z" fill="white"/>
+</mask>
+<g mask="url(#mask0_7_5)">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M47 0H35.25V11.75H47V0ZM23.5 11.75H35.25V23.5H47V35.25H35.25V47H23.5V35.25H11.75V47H0V35.25H11.75V23.5H0V11.75H11.75V0H23.5V11.75ZM23.5 23.5H11.75V11.75H23.5V23.5ZM23.5 23.5V35.25H35.25V23.5H23.5Z" fill="url(#paint0_linear_7_5)"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_7_5" x1="23.5" y1="0" x2="23.5" y2="47" gradientUnits="userSpaceOnUse">
+<stop stop-color="#A7B5FF"/>
+<stop offset="1" stop-color="#FF7BC0"/>
+</linearGradient>
+<clipPath id="clip0_7_5">
+<rect width="47" height="47" fill="white" transform="matrix(-1 0 0 1 47 0)"/>
+</clipPath>
+</defs>
+</svg>

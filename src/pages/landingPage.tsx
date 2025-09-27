@@ -1,11 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Button } from "../components/ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
+import { WaitlistPage } from "./waitlistPage";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 export const LandingPage = (): JSX.Element => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const pinRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -157,11 +160,24 @@ export const LandingPage = (): JSX.Element => {
 
           {/* CTA Button */}
           <div className="flex-shrink-0">
-            <Button className="px-4 py-2 bg-[#d9d9d9] rounded-[31px] hover:bg-[#c9c9c9] transition-colors">
-              <span className="font-['Instrument_Sans'] font-bold text-[#272635] text-xs tracking-[0] leading-normal">
-                Join us!
-              </span>
-            </Button>
+            <Popover open={isWaitlistOpen} onOpenChange={setIsWaitlistOpen}>
+              <PopoverTrigger asChild>
+                <Button className="px-4 py-2 bg-[#d9d9d9] rounded-[31px] hover:bg-[#c9c9c9] transition-colors">
+                  <span className="font-['Instrument_Sans'] font-bold text-[#272635] text-xs tracking-[0] leading-normal">
+                    Waitlist
+                  </span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto p-0 border-none bg-transparent shadow-none"
+                centerScreen={true}
+                backdropBlur={true}
+                sideOffset={0}
+                onBackdropClick={() => setIsWaitlistOpen(false)}
+              >
+                <WaitlistPage onClose={() => setIsWaitlistOpen(false)} />
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 

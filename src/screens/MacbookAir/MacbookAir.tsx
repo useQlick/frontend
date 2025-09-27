@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { Button } from "../../components/ui/button";
 
 export const MacbookAir = (): JSX.Element => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const { scrollYProgress } = useScroll();
-  
-  // Transform scroll progress to scale and position values
-  const pinkDivScale = useTransform(scrollYProgress, [0, 0.5], [1, 3]);
-  const pinkDivY = useTransform(scrollYProgress, [0, 0.5], [0, -200]);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -39,9 +33,9 @@ export const MacbookAir = (): JSX.Element => {
   ];
 
   return (
-    <div className="bg-black w-full min-h-[200vh] relative overflow-x-hidden">
+    <div className="bg-black w-full min-h-screen relative overflow-x-hidden">
       {/* Header */}
-      <header className="relative z-20 px-4 sm:px-6 lg:px-24 py-6">
+      <header className="relative z-10 px-4 sm:px-6 lg:px-24 py-6">
         <div className="flex items-center justify-between max-w-7xl mx-auto">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -101,7 +95,7 @@ export const MacbookAir = (): JSX.Element => {
             <div className="text-center lg:text-left mb-8 lg:mb-0">
               <h1 className="font-['Instrument_Serif'] font-normal text-4xl sm:text-6xl lg:text-8xl xl:text-9xl tracking-[0] leading-tight lg:leading-[87.1px] mb-6 lg:mb-8">
                 <span className="text-white block">
-                  Quantum
+                  Prediction
                 </span>
                 <span className="text-[#ff7bc0]">Market</span>
               </h1>
@@ -127,32 +121,36 @@ export const MacbookAir = (): JSX.Element => {
         </div>
       </main>
 
-      {/* Bottom Section with Pink Background and Eyes */}
-      <div className="relative mt-8 lg:mt-16 h-screen">
-        {/* Animated Pink Background */}
-        <motion.div 
-          className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[1066px] h-[200px] sm:h-[250px] lg:h-[359px] bg-[#ff7bc0] rounded-t-[50px] origin-bottom"
-          style={{
-            scale: pinkDivScale,
-            y: pinkDivY,
-          }}
-        />
+      {/* Bottom Section with Eyes */}
+      <div className="relative mt-8 lg:mt-16">
+        {/* Background Shape */}
+        <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-[1066px] h-[200px] sm:h-[250px] lg:h-[359px]">
+          <img
+            className="w-full h-full object-cover"
+            alt="Background shape"
+            src="/rectangle-2.svg"
+          />
+        </div>
 
-        {/* Eyes Container - Positioned on right side */}
-        <div className="absolute bottom-8 lg:bottom-16 right-4 sm:right-8 lg:right-24 z-20">
-          <div className="flex space-x-4 sm:space-x-6 lg:space-x-8">
+        {/* Eyes Container */}
+        <div className="relative z-10 flex justify-center items-end pb-8 lg:pb-16">
+          <div className="flex space-x-4 sm:space-x-8 lg:space-x-16">
             {/* Left Eye */}
             <div className="relative">
-              <div className="w-20 h-20 sm:w-32 sm:h-32 lg:w-40 lg:h-40 bg-white rounded-full flex items-center justify-center">
+              <div className="w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-white rounded-full flex items-center justify-center">
                 <div 
-                  className="w-10 h-10 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-black rounded-full transition-transform duration-100 ease-out"
+                  className="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-black rounded-full transition-transform duration-100 ease-out"
                   style={{
                     transform: `translate(${calculateEyePosition(
-                      window.innerWidth - (window.innerWidth < 640 ? 80 : window.innerWidth < 1024 ? 120 : 200), 
-                      window.innerHeight - (window.innerWidth < 640 ? 80 : window.innerWidth < 1024 ? 120 : 150)
+                      window.innerWidth < 640 ? window.innerWidth / 2 - 80 : 
+                      window.innerWidth < 1024 ? window.innerWidth / 2 - 120 : 
+                      window.innerWidth / 2 - 160, 
+                      window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).x}px, ${calculateEyePosition(
-                      window.innerWidth - (window.innerWidth < 640 ? 80 : window.innerWidth < 1024 ? 120 : 200), 
-                      window.innerHeight - (window.innerWidth < 640 ? 80 : window.innerWidth < 1024 ? 120 : 150)
+                      window.innerWidth < 640 ? window.innerWidth / 2 - 80 : 
+                      window.innerWidth < 1024 ? window.innerWidth / 2 - 120 : 
+                      window.innerWidth / 2 - 160, 
+                      window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).y}px)`
                   }}
                 ></div>
@@ -161,35 +159,26 @@ export const MacbookAir = (): JSX.Element => {
 
             {/* Right Eye */}
             <div className="relative">
-              <div className="w-20 h-20 sm:w-32 sm:h-32 lg:w-40 lg:h-40 bg-white rounded-full flex items-center justify-center">
+              <div className="w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-white rounded-full flex items-center justify-center">
                 <div 
-                  className="w-10 h-10 sm:w-16 sm:h-16 lg:w-20 lg:h-20 bg-black rounded-full transition-transform duration-100 ease-out"
+                  className="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-black rounded-full transition-transform duration-100 ease-out"
                   style={{
                     transform: `translate(${calculateEyePosition(
-                      window.innerWidth - (window.innerWidth < 640 ? 40 : window.innerWidth < 1024 ? 60 : 100), 
-                      window.innerHeight - (window.innerWidth < 640 ? 80 : window.innerWidth < 1024 ? 120 : 150)
+                      window.innerWidth < 640 ? window.innerWidth / 2 + 80 : 
+                      window.innerWidth < 1024 ? window.innerWidth / 2 + 120 : 
+                      window.innerWidth / 2 + 160, 
+                      window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).x}px, ${calculateEyePosition(
-                      window.innerWidth - (window.innerWidth < 640 ? 40 : window.innerWidth < 1024 ? 60 : 100), 
-                      window.innerHeight - (window.innerWidth < 640 ? 80 : window.innerWidth < 1024 ? 120 : 150)
+                      window.innerWidth < 640 ? window.innerWidth / 2 + 80 : 
+                      window.innerWidth < 1024 ? window.innerWidth / 2 + 120 : 
+                      window.innerWidth / 2 + 160, 
+                      window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).y}px)`
                   }}
                 ></div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Additional content to enable scrolling */}
-      <div className="relative z-10 px-4 sm:px-6 lg:px-24 py-16">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="font-['Instrument_Serif'] font-normal text-3xl sm:text-4xl lg:text-6xl text-white mb-8">
-            Scroll to see the magic
-          </h2>
-          <p className="font-['Instrument_Sans'] text-white text-lg sm:text-xl max-w-2xl mx-auto">
-            Watch as the pink background expands to fill the entire screen as you scroll down. 
-            The eyes will continue to follow your mouse movement throughout the experience.
-          </p>
         </div>
       </div>
     </div>

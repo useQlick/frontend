@@ -36,8 +36,8 @@ export const LandingPage = (): JSX.Element => {
       const rect = bgEl.getBoundingClientRect();
       const scaleX = window.innerWidth / rect.width;
       const scaleY = window.innerHeight / rect.height;
-      // Slight overshoot to ensure full coverage without edges
-      return Math.max(scaleX, scaleY) * 1.08;
+      // Increased overshoot to ensure full coverage without edges and add extra height
+      return Math.max(scaleX, scaleY) * 1.1;
     };
 
     gsap.set(bgEl, { transformOrigin: "50% 100%" });
@@ -47,14 +47,14 @@ export const LandingPage = (): JSX.Element => {
       scrollTrigger: {
         trigger: pinEl,
         start: "top bottom",
-        end: "+=160%",
+        end: "+=250%",
         scrub: true,
         pin: true,
         anticipatePin: 1,
       },
     });
 
-    tl.to(bgEl, { scale: computeTargetScale(), ease: "none", duration: 1 }, 0);
+    tl.to(bgEl, { scale: computeTargetScale(), ease: "none", duration: 1, delay: 0.8 }, 0);
 
     // Keep eyes locked to the pink shape's top with the same initial offset
     const positionEyes = () => {
@@ -76,21 +76,21 @@ export const LandingPage = (): JSX.Element => {
       tl.fromTo(
         txtEl,
         { opacity: 0 },
-        { opacity: 1, ease: "none", duration: 0.2 },
-        0.8
+        { opacity: 1, ease: "none", duration: 0.3, delay: 0.2 },
+        1.2
       );
     }
 
     const onResize = () => {
       const target = computeTargetScale();
       tl.clear();
-      tl.to(bgEl, { scale: target, ease: "none", duration: 1 }, 0);
+      tl.to(bgEl, { scale: target, ease: "none", duration: 1, delay: 0.6 }, 0);
       if (txtEl) {
         tl.fromTo(
           txtEl,
           { opacity: 0 },
-          { opacity: 1, ease: "none", duration: 0.2 },
-          0.8
+          { opacity: 1, ease: "none", duration: 0.3, delay: 0.2 },
+          1.2
         );
       }
       // Recompute eyes offset after layout changes
@@ -185,7 +185,7 @@ export const LandingPage = (): JSX.Element => {
           {/* Hero Section */}
           <div className="flex flex-col lg:flex-row items-center justify-between py-8 lg:py-8">
             <div className="text-center lg:text-left mb-8 lg:mb-0">
-              <h1 className="font-['Instrument_Serif'] font-normal text-4xl sm:text-6xl lg:text-8xl xl:text-9xl tracking-[0] leading-tight lg:leading-[87.1px] mb-6 lg:mb-8">
+              <h1 className="font-['Instrument_Serif'] font-normal text-4xl sm:text-6xl lg:text-8xl xl:text-9xl tracking-[0] leading-tight lg:leading-[87.1px] mb-3 lg:mb-8">
                 <span className="text-white block">
                   Why pick one market when you can
                 </span>
@@ -216,7 +216,7 @@ export const LandingPage = (): JSX.Element => {
       </main>
 
       {/* Bottom Section with Eyes (Pinned Scroll Animation) */}
-      <div ref={pinRef} className="relative mt-8 lg:mt-36">
+      <div ref={pinRef} className="relative mt-8 lg:mt-30">
         {/* Background Shape */}
         <div
           ref={backgroundRef}
@@ -275,11 +275,26 @@ export const LandingPage = (): JSX.Element => {
           </div>
         </div>
 
-        {/* Overlay Text during pinned animation (bottom aligned, fades in near end) */}
-        <div ref={overlayRef} className="absolute inset-x-0 bottom-4 sm:bottom-8 z-20 flex items-end justify-center pointer-events-none px-6">
-          <p className="font-['Instrument_Sans'] text-white text-sm sm:text-base lg:text-lg text-center max-w-2xl opacity-90">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </p>
+        {/* Overlay content during pinned animation */}
+        <div ref={overlayRef} className="absolute inset-0 z-30">
+          {/* Bottom-left copy block */}
+          <div className="absolute left-6 lg:left-24 bottom-24 sm:bottom-28 lg:bottom-32 max-w-4xl">
+            <h2 className="font-['Instrument_Serif'] font-normal text-3xl sm:text-5xl lg:text-6xl xl:text-7xl tracking-[0] leading-tight text-black mb-4">
+              Quantum Markets & Info-Finance
+            </h2>
+            <p className="font-['Instrument_Sans'] text-black text-xs sm:text-sm lg:text-base max-w-xl opacity-90">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+            </p>
+          </div>
+
+          {/* Bottom-right CTA */}
+          <div className="absolute right-4 sm:right-6 bottom-4 sm:bottom-6 pointer-events-auto">
+            <Button className="px-6 py-3 bg-black rounded-[31px] hover:bg-black/80 transition-colors">
+              <span className="font-['Instrument_Sans'] font-bold text-white text-sm tracking-[0] leading-normal">
+                Get Started →
+              </span>
+            </Button>
+          </div>
         </div>
       </div>
     </div>

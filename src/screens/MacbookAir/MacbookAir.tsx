@@ -17,7 +17,7 @@ export const MacbookAir = (): JSX.Element => {
     const deltaX = mousePosition.x - eyeCenterX;
     const deltaY = mousePosition.y - eyeCenterY;
     const angle = Math.atan2(deltaY, deltaX);
-    const distance = Math.min(15, Math.sqrt(deltaX * deltaX + deltaY * deltaY) / 10);
+    const distance = Math.min(35, Math.sqrt(deltaX * deltaX + deltaY * deltaY) / 8);
     
     return {
       x: Math.cos(angle) * distance,
@@ -139,7 +139,7 @@ export const MacbookAir = (): JSX.Element => {
             <div className="relative">
               <div className="w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-white rounded-full flex items-center justify-center">
                 <div 
-                  className="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-black rounded-full transition-transform duration-100 ease-out flex items-center justify-center"
+                  className="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-black rounded-full transition-transform duration-100 ease-out"
                   style={{
                     transform: `translate(${calculateEyePosition(
                       window.innerWidth < 640 ? window.innerWidth / 2 - 80 : 
@@ -153,9 +153,7 @@ export const MacbookAir = (): JSX.Element => {
                       window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).y}px)`
                   }}
-                >
-                  <div className="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-white rounded-full"></div>
-                </div>
+                ></div>
               </div>
             </div>
 
@@ -163,7 +161,7 @@ export const MacbookAir = (): JSX.Element => {
             <div className="relative">
               <div className="w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 bg-white rounded-full flex items-center justify-center">
                 <div 
-                  className="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-black rounded-full transition-transform duration-100 ease-out flex items-center justify-center"
+                  className="w-16 h-16 sm:w-24 sm:h-24 lg:w-32 lg:h-32 bg-black rounded-full transition-transform duration-100 ease-out"
                   style={{
                     transform: `translate(${calculateEyePosition(
                       window.innerWidth < 640 ? window.innerWidth / 2 + 80 : 
@@ -177,9 +175,7 @@ export const MacbookAir = (): JSX.Element => {
                       window.innerHeight - (window.innerWidth < 640 ? 100 : window.innerWidth < 1024 ? 150 : 200)
                     ).y}px)`
                   }}
-                >
-                  <div className="w-4 h-4 sm:w-6 sm:h-6 lg:w-8 lg:h-8 bg-white rounded-full"></div>
-                </div>
+                ></div>
               </div>
             </div>
           </div>

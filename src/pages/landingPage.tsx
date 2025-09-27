@@ -9,6 +9,8 @@ export const LandingPage = (): JSX.Element => {
   const pinRef = useRef<HTMLDivElement>(null);
   const backgroundRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const eyesRef = useRef<HTMLDivElement>(null);
+  const initialEyesOffsetRef = useRef<number>(Number.NaN);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -26,6 +28,7 @@ export const LandingPage = (): JSX.Element => {
     const pinEl = pinRef.current;
     const bgEl = backgroundRef.current;
     const txtEl = overlayRef.current;
+    const eyesEl = eyesRef.current;
     if (!pinEl || !bgEl) return;
 
     // Compute scale required to cover viewport from current size
@@ -52,6 +55,23 @@ export const LandingPage = (): JSX.Element => {
     });
 
     tl.to(bgEl, { scale: computeTargetScale(), ease: "none", duration: 1 }, 0);
+
+    // Keep eyes locked to the pink shape's top with the same initial offset
+    const positionEyes = () => {
+      if (!eyesEl) return;
+      const pinRect = pinEl.getBoundingClientRect();
+      const bgRect = bgEl.getBoundingClientRect();
+      if (Number.isNaN(initialEyesOffsetRef.current)) {
+        const eyesRect = eyesEl.getBoundingClientRect();
+        initialEyesOffsetRef.current = eyesRect.top - bgRect.top;
+      }
+      const newTop = bgRect.top - pinRect.top + initialEyesOffsetRef.current - 250;
+      eyesEl.style.top = `${newTop}px`;
+    };
+
+    // Position once and on every scrubbed frame
+    positionEyes();
+    tl.eventCallback("onUpdate", positionEyes);
     if (txtEl) {
       tl.fromTo(
         txtEl,
@@ -73,6 +93,9 @@ export const LandingPage = (): JSX.Element => {
           0.8
         );
       }
+      // Recompute eyes offset after layout changes
+      initialEyesOffsetRef.current = Number.NaN;
+      positionEyes();
       ScrollTrigger.refresh();
     };
     window.addEventListener("resize", onResize);
@@ -199,10 +222,10 @@ export const LandingPage = (): JSX.Element => {
         />
 
         {/* Eyes Container */}
-        <div className="absolute -top-96 left-1/2 transform -translate-x-1/2 z-10 flex justify-center items-start pt-8 lg:pt-30">
+        <div ref={eyesRef} className="absolute left-1/2 transform -translate-x-1/2 z-10 flex justify-center items-start pt-8 lg:pt-30">
           <div
             className="relative flex space-x-4 sm:space-x-8 lg:space-x-16"
-            style={{ left: "10%" }}
+            style={{ left: "30%" }}
           >
             {/* Left Eye */}
             <div className="relative">

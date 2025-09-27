@@ -95,7 +95,7 @@ export const MacbookAir = (): JSX.Element => {
             <div className="text-center lg:text-left mb-8 lg:mb-0">
               <h1 className="font-['Instrument_Serif'] font-normal text-4xl sm:text-6xl lg:text-8xl xl:text-9xl tracking-[0] leading-tight lg:leading-[87.1px] mb-6 lg:mb-8">
                 <span className="text-white block">
-                  Prediction
+                  Quantum
                 </span>
                 <span className="text-[#ff7bc0]">Market</span>
               </h1>

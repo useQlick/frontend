@@ -224,96 +224,35 @@ export const MarketPage = (): JSX.Element => {
   ]);
 
   // Function to fetch proposals for a decision
-  const fetchProposalsForDecision = async (decisionId: number, proposalIds: string[]): Promise<Proposal[]> => {
-    if (!quantumMarketContract) return [];
-    
-    console.log(`Fetching proposals for decision ${decisionId}. Proposal IDs from contract:`, proposalIds);
+  const fetchProposalsForDecision = async (_decisionId: number, proposalIds: string[]): Promise<Proposal[]> => {
+    if (!quantumMarketContract || proposalIds.length === 0) return [];
     
     const proposals: Proposal[] = [];
     
-    // Method 1: Use the proposal IDs from the decision
-    if (proposalIds && proposalIds.length > 0) {
-      for (const proposalId of proposalIds) {
-        try {
-          console.log(`Fetching proposal info for ID: ${proposalId}`);
-          const proposalData = await quantumMarketContract.proposalInfo(proposalId);
-          console.log(`Proposal ${proposalId} data:`, proposalData);
-          
-          if (proposalData.exists) {
-            proposals.push({
-              id: proposalId,
-              decisionId: Number(proposalData.decisionId),
-              metadata: proposalData.metadata || `Proposal ${proposalId.slice(0, 8)}...`,
-              poolKey: {
-                currency0: proposalData.poolKey.currency0,
-                currency1: proposalData.poolKey.currency1,
-                fee: Number(proposalData.poolKey.fee),
-                tickSpacing: Number(proposalData.poolKey.tickSpacing),
-                hooks: proposalData.poolKey.hooks
-              },
-              exists: proposalData.exists
-            });
-          }
-        } catch (error) {
-          console.log(`Failed to fetch proposal ${proposalId}:`, error);
+    for (const proposalId of proposalIds) {
+      try {
+        const proposalData = await quantumMarketContract.proposalInfo(proposalId);
+        
+        if (proposalData.exists) {
+          proposals.push({
+            id: proposalId,
+            decisionId: Number(proposalData.decisionId),
+            metadata: proposalData.metadata || `Proposal ${proposalId.slice(0, 8)}...`,
+            poolKey: {
+              currency0: proposalData.poolKey.currency0,
+              currency1: proposalData.poolKey.currency1,
+              fee: Number(proposalData.poolKey.fee),
+              tickSpacing: Number(proposalData.poolKey.tickSpacing),
+              hooks: proposalData.poolKey.hooks
+            },
+            exists: proposalData.exists
+          });
         }
+      } catch (error) {
+        console.log(`Failed to fetch proposal ${proposalId}:`, error);
       }
     }
     
-    // Method 2: Alternative approach - scan recent proposal IDs from events or generate known patterns
-    // This helps in case the proposals array isn't being returned correctly
-    if (proposals.length === 0) {
-      console.log(`No proposals found via array method, trying alternative scan for decision ${decisionId}...`);
-      
-      // Try some common proposal ID patterns that might have been created
-      const possibleProposalIds = [];
-      
-      // Generate some possible proposal IDs based on common patterns
-      for (let i = 0; i < 10; i++) {
-        const timestamp = Math.floor(Date.now() / 1000) - (i * 3600); // Check last 10 hours
-        const testId1 = ethers.keccak256(ethers.toUtf8Bytes(`proposal-${decisionId}-${timestamp}-${user?.wallet?.address || 'test'}`));
-        const testId2 = ethers.keccak256(ethers.toUtf8Bytes(`fresh-proposal-${decisionId}-${timestamp}`)); // NEW PATTERN
-        possibleProposalIds.push(testId1);
-        possibleProposalIds.push(testId2);
-      }
-      
-      // Also try the pattern used in script demo
-      for (let i = 0; i < 5; i++) {
-        const timestamp = Math.floor(Date.now() / 1000) - (i * 1800); // Check last 2.5 hours
-        const testId1 = ethers.keccak256(ethers.toUtf8Bytes(`quantum-proposal-${timestamp}`));
-        const testId2 = ethers.keccak256(ethers.toUtf8Bytes(`extended-proposal-${decisionId}-${timestamp}`)); // SCRIPT PATTERN
-        const testId3 = ethers.keccak256(ethers.toUtf8Bytes(`fresh-proposal-${timestamp}`)); // SCRIPT PATTERN
-        possibleProposalIds.push(testId1);
-        possibleProposalIds.push(testId2);
-        possibleProposalIds.push(testId3);
-      }
-      
-      for (const testProposalId of possibleProposalIds) {
-        try {
-          const proposalData = await quantumMarketContract.proposalInfo(testProposalId);
-          if (proposalData.exists && Number(proposalData.decisionId) === decisionId) {
-            console.log(`Found proposal via scan: ${testProposalId}`);
-            proposals.push({
-              id: testProposalId,
-              decisionId: Number(proposalData.decisionId),
-              metadata: proposalData.metadata || `Proposal ${testProposalId.slice(0, 8)}...`,
-              poolKey: {
-                currency0: proposalData.poolKey.currency0,
-                currency1: proposalData.poolKey.currency1,
-                fee: Number(proposalData.poolKey.fee),
-                tickSpacing: Number(proposalData.poolKey.tickSpacing),
-                hooks: proposalData.poolKey.hooks
-              },
-              exists: proposalData.exists
-            });
-          }
-        } catch (error) {
-          // Ignore errors for test IDs
-        }
-      }
-    }
-    
-    console.log(`Final proposals found for decision ${decisionId}:`, proposals);
     return proposals;
   };
 
@@ -329,15 +268,11 @@ export const MarketPage = (): JSX.Element => {
       const nextDecisionId = await quantumMarketContract.nextDecisionId();
       const marketCount = Number(nextDecisionId);
       
-      console.log(`=== FETCHING MARKETS/DECISIONS ===`);
-      console.log(`Next Decision ID from contract: ${nextDecisionId}`);
-      console.log(`Market count (Number): ${marketCount}`);
+      console.log(`Fetching markets/decisions. Next ID: ${marketCount}`);
       
       // Fetch each market/decision (starting from 1 as IDs are 1-indexed)
       // Check a few extra IDs beyond nextDecisionId to be safe in case of contract quirks
       const maxIdToCheck = Math.max(marketCount + 2, 10); // Check at least 10 IDs or nextId + 2
-      
-      console.log(`Will check IDs from 1 to ${maxIdToCheck}`);
       
       for (let i = 1; i <= maxIdToCheck; i++) {
         console.log(`Checking ID ${i}...`);
@@ -347,38 +282,16 @@ export const MarketPage = (): JSX.Element => {
           
           // Try to get decision data first (since script demo creates decisions)
           try {
-            let decisionData;
-            try {
-              decisionData = await quantumMarketContract.decisions(i);
-              console.log(`Decision ${i} raw data:`, decisionData);
-            } catch (decisionCallError) {
-              // If the decision call itself fails, it likely doesn't exist
-              console.log(`Decision ${i} call failed:`, decisionCallError);
-              throw decisionCallError;
-            }
+            const decisionData = await quantumMarketContract.decisions(i);
+            console.log(`Decision ${i} data:`, decisionData);
             
             // Check if decision exists (has metadata)
             if (decisionData && decisionData.metadata && decisionData.metadata.trim() !== '') {
               console.log(`Found decision ${i}: ${decisionData.metadata}`);
-              
-              // Safely access proposals array with defensive programming
-              let proposalIds = [];
-              try {
-                // Check if proposals property exists and is accessible
-                if (decisionData.proposals !== undefined && decisionData.proposals !== null) {
-                  proposalIds = Array.isArray(decisionData.proposals) ? decisionData.proposals : [];
-                  console.log(`Decision ${i} proposals array:`, proposalIds);
-                } else {
-                  console.log(`Decision ${i} has no proposals property or it's null`);
-                  proposalIds = [];
-                }
-              } catch (proposalError) {
-                console.warn(`Failed to access proposals for decision ${i}:`, proposalError);
-                proposalIds = [];
-              }
+              console.log(`Decision ${i} proposals:`, decisionData.proposals);
               
               // Fetch proposals for this decision
-              const proposals = await fetchProposalsForDecision(i, proposalIds);
+              const proposals = await fetchProposalsForDecision(i, decisionData.proposals || []);
               console.log(`Fetched ${proposals.length} proposals for decision ${i}:`, proposals);
               
               market = {
@@ -399,12 +312,6 @@ export const MarketPage = (): JSX.Element => {
             }
           } catch (decisionError) {
             console.log(`No decision found for ID ${i}:`, decisionError);
-            
-            // Log ABI decoding errors but don't skip - still try to check for markets
-            if (decisionError instanceof Error && decisionError.message.includes('ABI decoding')) {
-              console.log(`Decision ${i} doesn't exist (ABI decode error) - will check for market data instead`);
-            }
-            // Don't continue here - let it fall through to market checking
           }
           
           // If no decision found, try to get market data (from createMarket)
@@ -460,12 +367,8 @@ export const MarketPage = (): JSX.Element => {
         }
       }
       
-      console.log(`=== FINAL RESULTS ===`);
-      console.log(`Total markets/decisions found: ${markets.length}`);
-      console.log('Markets array:', markets);
-      console.log('Setting realMarkets state...');
+      console.log(`Total markets/decisions found: ${markets.length}`, markets);
       setRealMarkets(markets);
-      console.log('realMarkets state updated');
     } catch (error) {
       console.error('Failed to fetch markets:', error);
     }
@@ -473,86 +376,88 @@ export const MarketPage = (): JSX.Element => {
   };
 
   // Function to create a proposal for a decision (anyone can call this!)
-  // FIXED: Now follows the exact script pattern - ALWAYS create fresh tokens + pool
   const createProposalForDecision = async (decisionId: number, proposalMetadata: string) => {
     if (!orchestratorContract || !quantumMarketContract || !user?.wallet?.address) {
       throw new Error('Contracts not initialized or wallet not connected');
     }
 
     try {
-      console.log('=== Creating Proposal (Script-Style Pattern) ===');
-      console.log('Decision ID:', decisionId);
-      console.log('Proposal Metadata:', proposalMetadata);
-      console.log('User Address:', user.wallet.address);
-
-      // STEP 1: Deploy fresh tokens (ALWAYS, like script does)
-      console.log('Step 1: Deploying fresh tokens...');
-      const deployTokensTx = await orchestratorContract.deployTokens(ethers.parseEther('1000000'));
-      await deployTokensTx.wait();
-      console.log('✅ Fresh tokens deployed');
-
-      // STEP 2: Create fresh pool (ALWAYS, like script does)
-      console.log('Step 2: Creating fresh pool...');
-      let poolCreated = false;
+      // Simplified approach: Just register the proposal without creating a new pool
+      // We'll reuse the existing pool from the script demo or create a dummy pool key
       
+      // Step 1: Check if we have existing tokens, if not deploy them
+      let poolKey;
       try {
-        // Try 5-parameter version first (like script does)
-        console.log('Trying 5-parameter createPoolAndAddLiquidity...');
-        const createPoolTx = await orchestratorContract['createPoolAndAddLiquidity(address,uint24,int24,uint160,uint128)'](
-          '0x19A4a8ddCBB74B33e410CE2E27833e8c42FC80c0', // QUANTUM_MARKET_HOOK
-          3000, // FEE
-          60,   // TICK_SPACING
-          '79228162514264337593543950336', // SQRT_PRICE_X96
-          ethers.parseEther('100') // LIQUIDITY_DESIRED
-        );
-        await createPoolTx.wait();
-        console.log('✅ Fresh pool created with 5 parameters');
-        poolCreated = true;
-      } catch (error5) {
-        console.log('5-parameter version failed, trying 9-parameter version...');
+        // Try to get the last pool key (from script demo or previous proposals)
+        const poolKeyResult = await orchestratorContract.lastPoolKey();
+        
+        // Check if we have a valid pool key
+        if (poolKeyResult[0] && poolKeyResult[0] !== ethers.ZeroAddress) {
+          poolKey = {
+            currency0: poolKeyResult[0],
+            currency1: poolKeyResult[1], 
+            fee: poolKeyResult[2],
+            tickSpacing: poolKeyResult[3],
+            hooks: poolKeyResult[4]
+          };
+          console.log('Reusing existing pool key:', poolKey);
+        } else {
+          throw new Error('No existing pool found');
+        }
+      } catch (error) {
+        console.log('No existing pool found, creating new one...');
+        
+        // Deploy tokens if needed
+        let token0Address;
+        try {
+          token0Address = await orchestratorContract.token0();
+          if (!token0Address || token0Address === ethers.ZeroAddress) {
+            throw new Error('No tokens deployed');
+          }
+        } catch (error) {
+          console.log('Deploying tokens...');
+          const deployTx = await orchestratorContract.deployTokens(QLICK_CONFIG.MINT_AMOUNT);
+          await deployTx.wait();
+          token0Address = await orchestratorContract.token0();
+        }
+
+        // Try to create pool (may fail if pool already exists, which is ok)
         try {
           const createPoolTx = await orchestratorContract['createPoolAndAddLiquidity(address,uint24,int24,uint160,int24,int24,uint128,uint256,uint256)'](
-            '0x19A4a8ddCBB74B33e410CE2E27833e8c42FC80c0', // QUANTUM_MARKET_HOOK
-            3000, // FEE
-            60,   // TICK_SPACING
-            '79228162514264337593543950336', // SQRT_PRICE_X96
-            -120, // TICK_LOWER
-            120,  // TICK_UPPER
-            ethers.parseEther('100'), // LIQUIDITY_DESIRED
-            ethers.parseEther('100'), // AMOUNT_0_MAX
-            ethers.parseEther('100')  // AMOUNT_1_MAX
+            QLICK_CONFIG.QUANTUM_MARKET_HOOK,
+            QLICK_CONFIG.FEE,
+            QLICK_CONFIG.TICK_SPACING,
+            QLICK_CONFIG.SQRT_PRICE_X96,
+            QLICK_CONFIG.TICK_LOWER,
+            QLICK_CONFIG.TICK_UPPER,
+            QLICK_CONFIG.LIQUIDITY_DESIRED,
+            QLICK_CONFIG.AMOUNT_0_MAX,
+            QLICK_CONFIG.AMOUNT_1_MAX
           );
           await createPoolTx.wait();
-          console.log('✅ Fresh pool created with 9 parameters');
-          poolCreated = true;
-        } catch (error9) {
-          console.error('Both pool creation methods failed:', error9);
-          throw new Error('Failed to create fresh pool - cannot continue without a fresh pool');
+          console.log('Successfully created new pool');
+        } catch (poolError) {
+          console.log('Pool creation failed (may already exist):', poolError);
+          // Continue anyway - we'll try to get the pool key
         }
+
+        // Get the pool key
+        const poolKeyResult = await orchestratorContract.lastPoolKey();
+        poolKey = {
+          currency0: poolKeyResult[0],
+          currency1: poolKeyResult[1], 
+          fee: poolKeyResult[2],
+          tickSpacing: poolKeyResult[3],
+          hooks: poolKeyResult[4]
+        };
       }
 
-      if (!poolCreated) {
-        throw new Error('Pool creation failed - this is required for proposal creation');
-      }
-
-      // STEP 3: Get the fresh pool key (like script does)
-      console.log('Step 3: Getting fresh pool key...');
-      const poolKeyResult = await orchestratorContract.lastPoolKey();
-      const poolKey = {
-        currency0: poolKeyResult[0],
-        currency1: poolKeyResult[1],
-        fee: Number(poolKeyResult[2]),
-        tickSpacing: Number(poolKeyResult[3]),
-        hooks: poolKeyResult[4]
-      };
-      console.log('✅ Fresh pool key retrieved:', poolKey);
-
-      // STEP 4: Create proposal ID (like script - using different pattern)
+      // Step 2: Create unique proposal ID
       const timestamp = Math.floor(Date.now() / 1000);
-      const proposalId = ethers.keccak256(ethers.toUtf8Bytes(`fresh-proposal-${decisionId}-${timestamp}`));
-
-      // STEP 5: Create proposal (like script does)
-      console.log('Step 4: Creating proposal...');
+      const proposalId = ethers.keccak256(ethers.toUtf8Bytes(`proposal-${decisionId}-${timestamp}-${user.wallet.address}`));
+      
+      // Step 3: Register the proposal with the decision
+      console.log('Registering proposal with decision...');
       console.log('Decision ID:', decisionId);
       console.log('Proposal ID:', proposalId);
       console.log('Metadata:', proposalMetadata);
@@ -564,25 +469,17 @@ export const MarketPage = (): JSX.Element => {
         proposalMetadata,
         poolKey
       );
-      const receipt = await createProposalTx.wait();
+      await createProposalTx.wait();
 
-      console.log(`✅ Successfully created proposal ${proposalId} for decision ${decisionId}`);
-      console.log('Transaction receipt:', receipt);
-      
-      // Force refresh markets to show the new proposal
-      console.log('Refreshing markets after proposal creation...');
-      setTimeout(() => {
-        fetchRealMarkets();
-      }, 3000); // Wait 3 seconds for blockchain state to update
-      
+      console.log(`Successfully created proposal ${proposalId} for decision ${decisionId}`);
       return { proposalId, poolKey };
     } catch (error) {
-      console.error('❌ Failed to create proposal:', error);
+      console.error('Failed to create proposal:', error);
       
       // Add more specific error handling
       if (error instanceof Error) {
         if (error.message.includes('0x7983c051')) {
-          throw new Error('Pool creation failed - this might be due to pool collision or invalid parameters');
+          throw new Error('Pool creation failed - this might be due to pool already existing or invalid parameters');
         } else if (error.message.includes('settled')) {
           throw new Error('Cannot add proposals to a settled decision');
         } else if (error.message.includes('exists')) {
@@ -638,14 +535,7 @@ export const MarketPage = (): JSX.Element => {
         `Proposal for Market ${marketId}`,
         poolKey
       );
-      const receipt = await createProposalTx.wait();
-      
-      console.log(`Successfully created market proposal ${proposalId} for market ${marketId}`, receipt);
-      
-      // Force refresh markets to show the new proposal
-      setTimeout(() => {
-        fetchRealMarkets();
-      }, 2000);
+      await createProposalTx.wait();
 
       return { proposalId, poolKey };
     } catch (error) {
@@ -2088,13 +1978,7 @@ export const MarketPage = (): JSX.Element => {
                               try {
                                 const decision = await quantumMarketContract.decisions(id);
                                 if (decision.metadata && decision.metadata.trim() !== '') {
-                                  const proposalCount = decision.proposals ? decision.proposals.length : 0;
-                                  results.push(`ID ${id}: ${decision.metadata.substring(0, 30)}... (${proposalCount} proposals)`);
-                                  
-                                  // Log the actual proposal IDs for debugging
-                                  if (proposalCount > 0) {
-                                    console.log(`Decision ${id} proposal IDs:`, decision.proposals);
-                                  }
+                                  results.push(`ID ${id}: ${decision.metadata.substring(0, 50)}...`);
                                 } else {
                                   results.push(`ID ${id}: Empty/No metadata`);
                                 }
@@ -2112,95 +1996,25 @@ export const MarketPage = (): JSX.Element => {
                       >
                         Scan Decisions
                       </Button>
-                      
-                      <Button
-                        onClick={async () => {
-                          if (quantumMarketContract && user?.wallet?.address) {
-                            const results = [];
-                            const testProposalIds = [];
-                            
-                            // Generate possible proposal IDs based on recent timestamps
-                            const now = Math.floor(Date.now() / 1000);
-                            for (let i = 0; i < 20; i++) {
-                              const timestamp = now - (i * 1800); // Check last 10 hours in 30-min intervals
-                              for (let decisionId = 1; decisionId <= 10; decisionId++) {
-                                const testId1 = ethers.keccak256(ethers.toUtf8Bytes(`proposal-${decisionId}-${timestamp}-${user.wallet.address}`));
-                                const testId2 = ethers.keccak256(ethers.toUtf8Bytes(`quantum-proposal-${timestamp}`));
-                                const testId3 = ethers.keccak256(ethers.toUtf8Bytes(`fresh-proposal-${decisionId}-${timestamp}`)); // NEW PATTERN
-                                const testId4 = ethers.keccak256(ethers.toUtf8Bytes(`extended-proposal-${decisionId}-${timestamp}`)); // SCRIPT PATTERN
-                                testProposalIds.push({ id: testId1, pattern: `proposal-${decisionId}-${timestamp}` });
-                                testProposalIds.push({ id: testId2, pattern: `quantum-proposal-${timestamp}` });
-                                testProposalIds.push({ id: testId3, pattern: `fresh-proposal-${decisionId}-${timestamp}` });
-                                testProposalIds.push({ id: testId4, pattern: `extended-proposal-${decisionId}-${timestamp}` });
-                              }
-                            }
-                            
-                            console.log(`Testing ${testProposalIds.length} possible proposal IDs...`);
-                            
-                            for (const { id: proposalId, pattern } of testProposalIds) {
-                              try {
-                                const proposalData = await quantumMarketContract.proposalInfo(proposalId);
-                                if (proposalData.exists) {
-                                  results.push(`Found: ${proposalData.metadata} (Decision ${proposalData.decisionId})`);
-                                  console.log(`Found proposal:`, { proposalId, pattern, data: proposalData });
-                                }
-                              } catch (error) {
-                                // Ignore errors for test IDs
-                              }
-                            }
-                            
-                            if (results.length === 0) {
-                              results.push('No proposals found with common patterns');
-                            }
-                            
-                            console.log('Proposal scan results:', results);
-                            alert(`Proposal Scan Results:\n${results.join('\n')}`);
-                          }
-                        }}
-                        size="sm"
-                        className="bg-purple-600 hover:bg-purple-700 text-white text-xs"
-                      >
-                        Scan Proposals
-                      </Button>
                     </div>
                   </div>
                 </div>
               )}
               
               {/* Real Markets Section */}
-              <div className="mb-8">
-                <h3 className="text-lg font-semibold text-green-400 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  On-Chain Quantum Markets ({realMarkets.length})
-                  {isLoadingMarkets && <span className="text-yellow-400 text-sm ml-2">(Loading...)</span>}
-                </h3>
-                
-                {isLoadingMarkets ? (
-                  <div className="text-center py-8 text-gray-400">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-400 mx-auto mb-2"></div>
-                    Loading on-chain markets...
-                  </div>
-                ) : realMarkets.length > 0 ? (
+              {realMarkets.length > 0 && (
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-green-400 mb-4 flex items-center gap-2">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    On-Chain Quantum Markets ({realMarkets.length})
+                  </h3>
                   <div className="space-y-4">
                     {realMarkets.map(market => (
                       <MarketCard key={`real-${market.id}`} market={market} isReal={true} />
                     ))}
                   </div>
-                ) : (
-                  <div className="text-center py-8 text-gray-400 border-2 border-dashed border-gray-600 rounded-lg">
-                    <div className="mb-2">🔍 No on-chain markets found</div>
-                    <div className="text-sm">
-                      Try creating a decision or check the console for debugging info
-                    </div>
-                    <button
-                      onClick={fetchRealMarkets}
-                      className="mt-3 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded text-sm"
-                    >
-                      Refresh Markets
-                    </button>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
               
               {/* Mock Markets Section */}
               <div>

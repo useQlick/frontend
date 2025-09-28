@@ -1088,7 +1088,7 @@ export const MarketPage = (): JSX.Element => {
 
     const handleCreate = async () => {
       if (!proposalTitle.trim()) return;
-      
+
       setIsCreating(true);
       try {
         await createProposalForDecision(decisionId, proposalTitle.trim());
@@ -1099,7 +1099,7 @@ export const MarketPage = (): JSX.Element => {
       } catch (error) {
         console.error('Failed to create proposal:', error);
         let errorMessage = 'Failed to create proposal. ';
-        
+
         if (error instanceof Error) {
           if (error.message.includes('settled')) {
             errorMessage += 'This decision has already been settled.';
@@ -1111,7 +1111,7 @@ export const MarketPage = (): JSX.Element => {
             errorMessage += error.message;
           }
         }
-        
+
         alert(errorMessage + ' Please try again.');
       }
       setIsCreating(false);
@@ -1120,27 +1120,27 @@ export const MarketPage = (): JSX.Element => {
     if (showForm) {
       return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 w-full max-w-md">
-            <h3 className="text-white font-semibold text-lg mb-4">Add Proposal to Decision #{decisionId}</h3>
+          <div className="bg-white rounded-[31px] p-6 border border-black/10 w-full max-w-md shadow-lg">
+            <h3 className="text-black font-semibold text-lg mb-4 font-['Instrument_Serif']">Add Proposal to Decision #{decisionId}</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-gray-300 text-sm mb-2">Proposal Title/Description</label>
+                <label className="block text-black text-sm mb-2 font-['Instrument_Sans'] font-medium">Proposal Title/Description</label>
                 <input
                   type="text"
                   value={proposalTitle}
                   onChange={(e) => setProposalTitle(e.target.value)}
-                  className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-black/5 border border-black/20 rounded-[16px] px-4 py-3 text-black focus:border-[#64C967] focus:outline-none font-['Instrument_Sans']"
                   placeholder="Describe your proposed solution..."
                 />
               </div>
-              <div className="mb-4 p-3 bg-blue-900/20 border border-blue-700/50 rounded-lg">
-                <p className="text-blue-300 text-sm">
+              <div className="mb-4 p-3 bg-[#64C967]/10 border border-[#64C967]/30 rounded-[16px]">
+                <p className="text-black/80 text-sm font-['Instrument_Sans']">
                   💡 <strong>Anyone can propose!</strong> Your proposal will reuse existing pools for trading.
                 </p>
               </div>
-              
+
               {/* Debug info */}
-              <div className="mb-4 p-3 bg-gray-800 rounded-lg text-xs text-gray-400">
+              <div className="mb-4 p-3 bg-black/5 rounded-[16px] border border-black/10 text-xs text-black/60 font-['Instrument_Sans']">
                 <div>Decision ID: {decisionId}</div>
                 <div>Your Address: {user?.wallet?.address}</div>
                 <div>Contracts Ready: {orchestratorContract && quantumMarketContract ? 'Yes' : 'No'}</div>
@@ -1149,14 +1149,14 @@ export const MarketPage = (): JSX.Element => {
                 <Button
                   onClick={handleCreate}
                   disabled={isCreating || !proposalTitle.trim() || !authenticated}
-                  className="flex-1 bg-purple-600 hover:bg-purple-700 text-white disabled:bg-gray-600"
+                  className="flex-1 bg-[#64C967] hover:bg-[#64C967]/90 text-black disabled:bg-black/20 disabled:text-black/50 font-['Instrument_Sans'] font-bold rounded-[31px]"
                 >
                   {isCreating ? 'Creating...' : 'Add Proposal'}
                 </Button>
                 <Button
                   onClick={() => setShowForm(false)}
                   variant="outline"
-                  className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800"
+                  className="flex-1 border-black/20 text-black hover:bg-black/5 font-['Instrument_Sans'] rounded-[31px]"
                 >
                   Cancel
                 </Button>
@@ -1172,7 +1172,7 @@ export const MarketPage = (): JSX.Element => {
         onClick={() => setShowForm(true)}
         disabled={!authenticated}
         size="sm"
-        className="bg-purple-600 hover:bg-purple-700 text-white disabled:bg-gray-600"
+        className="bg-[#64C967] hover:bg-[#64C967]/90 text-black disabled:bg-black/20 disabled:text-black/50 font-['Instrument_Sans'] font-bold rounded-[31px]"
       >
         Add Proposal
       </Button>
@@ -1187,18 +1187,18 @@ export const MarketPage = (): JSX.Element => {
 
     const handleCreate = async () => {
       if (!title.trim() || !deadline) return;
-      
+
       setIsCreating(true);
       try {
         const deadlineTimestamp = Math.floor(new Date(deadline).getTime() / 1000);
-        
+
         // Validate deadline is in the future
         if (deadlineTimestamp <= Math.floor(Date.now() / 1000)) {
           alert('Deadline must be in the future');
           setIsCreating(false);
           return;
         }
-        
+
         await createNewMarket(title.trim(), deadlineTimestamp);
         setTitle('');
         setDeadline('');
@@ -1208,7 +1208,7 @@ export const MarketPage = (): JSX.Element => {
       } catch (error) {
         console.error('Failed to create market:', error);
         let errorMessage = 'Failed to create market. ';
-        
+
         if (error instanceof Error) {
           if (error.message.includes('factory')) {
             errorMessage += 'Factory not set properly. ';
@@ -1220,7 +1220,7 @@ export const MarketPage = (): JSX.Element => {
             errorMessage += error.message;
           }
         }
-        
+
         alert(errorMessage + ' Please try again.');
       }
       setIsCreating(false);
@@ -1229,29 +1229,29 @@ export const MarketPage = (): JSX.Element => {
     if (showForm) {
       return (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 w-full max-w-md">
-            <h3 className="text-white font-semibold text-lg mb-4">Create New Market</h3>
+          <div className="bg-white rounded-[31px] p-6 border border-black/10 w-full max-w-md shadow-lg">
+            <h3 className="text-black font-semibold text-lg mb-4 font-['Instrument_Serif']">Create New Market</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-gray-300 text-sm mb-2">Market Title</label>
+                <label className="block text-black text-sm mb-2 font-['Instrument_Sans'] font-medium">Market Title</label>
                 <input
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-black/5 border border-black/20 rounded-[16px] px-4 py-3 text-black focus:border-[#64C967] focus:outline-none font-['Instrument_Sans']"
                   placeholder="Enter market question..."
                 />
               </div>
               <div>
-                <label className="block text-gray-300 text-sm mb-2">Deadline</label>
+                <label className="block text-black text-sm mb-2 font-['Instrument_Sans'] font-medium">Deadline</label>
                 <input
                   type="datetime-local"
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
-                  className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
+                  className="w-full bg-black/5 border border-black/20 rounded-[16px] px-4 py-3 text-black focus:border-[#64C967] focus:outline-none font-['Instrument_Sans']"
                 />
               </div>
-              <div className="mb-4 p-3 bg-gray-800 rounded-lg text-xs text-gray-400">
+              <div className="mb-4 p-3 bg-black/5 rounded-[16px] border border-black/10 text-xs text-black/60 font-['Instrument_Sans']">
                 <div>Orchestrator: {QLICK_CONFIG.QLICK_ORCHESTRATOR}</div>
                 <div>Market Manager: {QLICK_CONFIG.QUANTUM_MARKET_MANAGER}</div>
                 <div>Connected: {authenticated ? 'Yes' : 'No'}</div>
@@ -1261,14 +1261,14 @@ export const MarketPage = (): JSX.Element => {
                 <Button
                   onClick={handleCreate}
                   disabled={isCreating || !title.trim() || !deadline || !authenticated}
-                  className="flex-1 bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-600"
+                  className="flex-1 bg-[#64C967] hover:bg-[#64C967]/90 text-black disabled:bg-black/20 disabled:text-black/50 font-['Instrument_Sans'] font-bold rounded-[31px]"
                 >
                   {isCreating ? 'Creating...' : 'Create Market'}
                 </Button>
                 <Button
                   onClick={() => setShowForm(false)}
                   variant="outline"
-                  className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800"
+                  className="flex-1 border-black/20 text-black hover:bg-black/5 font-['Instrument_Sans'] rounded-[31px]"
                 >
                   Cancel
                 </Button>
@@ -1284,7 +1284,7 @@ export const MarketPage = (): JSX.Element => {
         onClick={() => setShowForm(true)}
         disabled={!authenticated || !quantumMarketContract}
         size="sm"
-        className="bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-600"
+        className="bg-[#64C967] hover:bg-[#64C967]/90 text-black disabled:bg-black/20 disabled:text-black/50 font-['Instrument_Sans'] font-bold rounded-[31px]"
       >
         Create Market
       </Button>
@@ -1292,33 +1292,33 @@ export const MarketPage = (): JSX.Element => {
   };
 
   const ProposalCard = ({ proposal, isWinner = false }: { proposal: Proposal; isWinner?: boolean }) => (
-    <div className={`bg-gray-800 rounded-lg p-4 border ${isWinner ? 'border-green-500 bg-green-900/20' : 'border-gray-600'}`}>
+    <div className={`bg-black/5 rounded-[16px] p-4 border ${isWinner ? 'border-[#64C967] bg-[#64C967]/10' : 'border-black/10'}`}>
       <div className="flex justify-between items-start mb-3">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-1">
-            <h4 className="text-white font-medium text-sm">{proposal.metadata}</h4>
+            <h4 className="text-black font-medium text-sm font-['Instrument_Sans']">{proposal.metadata}</h4>
             {isWinner && (
-              <span className="inline-block px-2 py-1 bg-green-900 text-green-300 text-xs rounded">
+              <span className="inline-block px-2 py-1 bg-[#64C967] text-black text-xs rounded-[12px] font-['Instrument_Sans'] font-medium">
                 WINNER
               </span>
             )}
           </div>
-          <div className="text-xs text-gray-400 space-y-1">
+          <div className="text-xs text-black/60 space-y-1 font-['Instrument_Sans']">
             <div>Proposal ID: {proposal.id.slice(0, 10)}...{proposal.id.slice(-6)}</div>
             <div>Pool Fee: {proposal.poolKey.fee / 10000}%</div>
             <div>Tick Spacing: {proposal.poolKey.tickSpacing}</div>
           </div>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-2">
-        <div className="bg-blue-900/30 border border-blue-700 rounded p-2 text-center">
-          <div className="text-blue-400 font-bold text-sm">Pool Active</div>
-          <div className="text-blue-300 text-xs">Trade Available</div>
+        <div className="bg-[#64C967]/20 border border-[#64C967]/30 rounded-[12px] p-2 text-center">
+          <div className="text-black font-bold text-sm font-['Instrument_Sans']">Pool Active</div>
+          <div className="text-black/70 text-xs font-['Instrument_Sans']">Trade Available</div>
         </div>
-        <div className="bg-gray-700/30 border border-gray-600 rounded p-2 text-center">
-          <div className="text-gray-400 font-bold text-sm">0.5</div>
-          <div className="text-gray-300 text-xs">Price</div>
+        <div className="bg-black/10 border border-black/20 rounded-[12px] p-2 text-center">
+          <div className="text-black font-bold text-sm font-['Instrument_Sans']">0.5</div>
+          <div className="text-black/70 text-xs font-['Instrument_Sans']">Price</div>
         </div>
       </div>
     </div>
@@ -1326,24 +1326,24 @@ export const MarketPage = (): JSX.Element => {
 
   const MarketCard = ({ market, isReal = false }: { market: Market; isReal?: boolean }) => {
     const [showProposals, setShowProposals] = useState(false);
-    
+
     return (
-    <div 
-      className="bg-gray-900 rounded-lg p-6 border border-gray-700 hover:border-gray-600 transition-colors cursor-pointer"
+    <div
+      className="bg-white rounded-[31px] p-6 border border-black/10 hover:border-black/20 transition-colors cursor-pointer shadow-lg"
       onClick={() => setSelectedMarket(market)}
     >
       <div className="flex justify-between items-start mb-4">
         <div className="flex-1">
           <div className="flex items-center gap-2 mb-2">
-            <h3 className="text-white font-semibold text-lg">{market.title}</h3>
+            <h3 className="text-black font-semibold text-lg font-['Instrument_Serif']">{market.title}</h3>
             {isReal && (
-              <span className="inline-block px-2 py-1 bg-green-900 text-green-300 text-xs rounded">
+              <span className="inline-block px-3 py-1 bg-[#64C967] text-black text-xs rounded-[16px] font-['Instrument_Sans'] font-medium">
                 ON-CHAIN
               </span>
             )}
           </div>
-          <p className="text-gray-400 text-sm mb-3 line-clamp-2">{market.description}</p>
-          <div className="flex items-center gap-4 text-sm text-gray-400">
+          <p className="text-black/70 text-sm mb-3 line-clamp-2 font-['Instrument_Sans']">{market.description}</p>
+          <div className="flex items-center gap-4 text-sm text-black/60 font-['Instrument_Sans']">
             <span className="flex items-center gap-1">
               <DollarSign className="w-4 h-4" />
               {market.volume}
@@ -1364,7 +1364,7 @@ export const MarketPage = (): JSX.Element => {
             )}
           </div>
           {isReal && market.contractData && (
-            <div className="mt-2 text-xs text-gray-500">
+            <div className="mt-2 text-xs text-black/50 font-['Instrument_Sans']">
               <span>Creator: {market.contractData.creator.slice(0, 6)}...{market.contractData.creator.slice(-4)}</span>
               <span className="ml-4">Min Deposit: {ethers.formatEther(market.contractData.minDeposit)} ETH</span>
               <span className="ml-4">Status: {MarketStatus[market.contractData.status]}</span>
@@ -1372,53 +1372,53 @@ export const MarketPage = (): JSX.Element => {
           )}
         </div>
         <div className="ml-4">
-          <span className="inline-block px-2 py-1 bg-blue-900 text-blue-300 text-xs rounded">
+          <span className="inline-block px-3 py-1 bg-black/10 text-black text-xs rounded-[16px] font-['Instrument_Sans'] font-medium">
             {market.category}
           </span>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-2 gap-3">
-        <div className="bg-green-900/30 border border-green-700 rounded-lg p-3 text-center">
-          <div className="text-green-400 font-bold text-lg">{formatPercentage(market.yesPrice)}</div>
-          <div className="text-green-300 text-sm">YES</div>
+        <div className="bg-[#64C967]/20 border border-[#64C967]/30 rounded-[16px] p-3 text-center">
+          <div className="text-black font-bold text-lg font-['Instrument_Sans']">{formatPercentage(market.yesPrice)}</div>
+          <div className="text-black/70 text-sm font-['Instrument_Sans']">YES</div>
         </div>
-        <div className="bg-red-900/30 border border-red-700 rounded-lg p-3 text-center">
-          <div className="text-red-400 font-bold text-lg">{formatPercentage(market.noPrice)}</div>
-          <div className="text-red-300 text-sm">NO</div>
+        <div className="bg-black/10 border border-black/20 rounded-[16px] p-3 text-center">
+          <div className="text-black font-bold text-lg font-['Instrument_Sans']">{formatPercentage(market.noPrice)}</div>
+          <div className="text-black/70 text-sm font-['Instrument_Sans']">NO</div>
         </div>
       </div>
-      
+
       {/* Add Proposal Section for Decisions without proposals */}
       {market.category === 'Decision' && market.status === 'active' && market.decisionId && (!market.proposals || market.proposals.length === 0) && (
-        <div className="mt-4 border-t border-gray-700 pt-4">
+        <div className="mt-4 border-t border-black/10 pt-4">
           <div className="flex items-center justify-between">
             <div>
-              <h4 className="text-gray-300 font-medium text-sm">No Proposals Yet</h4>
-              <p className="text-gray-500 text-xs">Be the first to propose a solution!</p>
+              <h4 className="text-black font-medium text-sm font-['Instrument_Sans']">No Proposals Yet</h4>
+              <p className="text-black/60 text-xs font-['Instrument_Sans']">Be the first to propose a solution!</p>
             </div>
             <div onClick={(e) => e.stopPropagation()}>
-              <AddProposalButton 
-                decisionId={market.decisionId} 
+              <AddProposalButton
+                decisionId={market.decisionId}
                 onProposalCreated={fetchRealMarkets}
               />
             </div>
           </div>
         </div>
       )}
-      
+
       {/* Proposals Section for Decisions */}
       {market.proposals && market.proposals.length > 0 && (
-        <div className="mt-4 border-t border-gray-700 pt-4">
+        <div className="mt-4 border-t border-black/10 pt-4">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-gray-300 font-medium text-sm">
+            <h4 className="text-black font-medium text-sm font-['Instrument_Sans']">
               Proposals ({market.proposals.length})
             </h4>
             <div className="flex items-center gap-2">
               {market.status === 'active' && market.decisionId && (
                 <div onClick={(e) => e.stopPropagation()}>
-                  <AddProposalButton 
-                    decisionId={market.decisionId} 
+                  <AddProposalButton
+                    decisionId={market.decisionId}
                     onProposalCreated={fetchRealMarkets}
                   />
                 </div>
@@ -1428,27 +1428,27 @@ export const MarketPage = (): JSX.Element => {
                   e.stopPropagation();
                   setShowProposals(!showProposals);
                 }}
-                className="text-blue-400 hover:text-blue-300 text-xs"
+                className="text-[#64C967] hover:text-[#64C967]/80 text-xs font-['Instrument_Sans'] font-medium"
               >
                 {showProposals ? 'Hide' : 'Show'} Proposals
               </button>
             </div>
           </div>
-          
+
           {showProposals && (
             <div className="space-y-2">
               {market.proposals.map((proposal) => (
-                <ProposalCard 
-                  key={proposal.id} 
-                  proposal={proposal} 
+                <ProposalCard
+                  key={proposal.id}
+                  proposal={proposal}
                   isWinner={market.winningProposalId === proposal.id}
                 />
               ))}
             </div>
           )}
-          
+
           {!showProposals && (
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-black/60 font-['Instrument_Sans']">
               Click "Show Proposals" to see {market.proposals.length} proposal{market.proposals.length !== 1 ? 's' : ''} for this decision
             </div>
           )}
@@ -1462,10 +1462,10 @@ export const MarketPage = (): JSX.Element => {
     const [isTrading, setIsTrading] = useState(false);
     const [isCreatingProposal, setIsCreatingProposal] = useState(false);
     const [isResolving, setIsResolving] = useState(false);
-    
+
     const handleTrade = async () => {
       if (!tradeAmount || parseFloat(tradeAmount) <= 0) return;
-      
+
       setIsTrading(true);
       try {
         if (market.contractData) {
@@ -1486,7 +1486,7 @@ export const MarketPage = (): JSX.Element => {
 
     const handleCreateProposal = async () => {
       if (!market.contractData) return;
-      
+
       setIsCreatingProposal(true);
       try {
         await createProposalForMarket(market.contractData.id);
@@ -1501,7 +1501,7 @@ export const MarketPage = (): JSX.Element => {
 
     const handleResolve = async (outcome: boolean) => {
       if (!market.contractData) return;
-      
+
       setIsResolving(true);
       try {
         await resolveMarket(market.contractData.id, outcome);
@@ -1514,15 +1514,15 @@ export const MarketPage = (): JSX.Element => {
     };
 
     return (
-    <div className="bg-gray-900 rounded-lg p-6 border border-gray-700">
-      <h3 className="text-white font-semibold text-xl mb-4">{market.title}</h3>
-      
+    <div className="bg-white rounded-[31px] p-6 border border-black/10 shadow-lg">
+      <h3 className="text-black font-semibold text-xl mb-4 font-['Instrument_Serif']">{market.title}</h3>
+
       <div className="grid grid-cols-2 gap-4 mb-6">
         <button
-          className={`p-4 rounded-lg border transition-colors ${
-            tradeSide === 'yes' 
-              ? 'bg-green-900/50 border-green-600 text-green-300' 
-              : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
+          className={`p-4 rounded-[16px] border transition-colors font-['Instrument_Sans'] ${
+            tradeSide === 'yes'
+              ? 'bg-[#64C967] border-[#64C967] text-black'
+              : 'bg-black/5 border-black/20 text-black/70 hover:border-black/30'
           }`}
           onClick={() => setTradeSide('yes')}
         >
@@ -1530,10 +1530,10 @@ export const MarketPage = (): JSX.Element => {
           <div className="text-sm">YES</div>
         </button>
         <button
-          className={`p-4 rounded-lg border transition-colors ${
-            tradeSide === 'no' 
-              ? 'bg-red-900/50 border-red-600 text-red-300' 
-              : 'bg-gray-800 border-gray-600 text-gray-400 hover:border-gray-500'
+          className={`p-4 rounded-[16px] border transition-colors font-['Instrument_Sans'] ${
+            tradeSide === 'no'
+              ? 'bg-black border-black text-white'
+              : 'bg-black/5 border-black/20 text-black/70 hover:border-black/30'
           }`}
           onClick={() => setTradeSide('no')}
         >
@@ -1543,69 +1543,69 @@ export const MarketPage = (): JSX.Element => {
       </div>
 
       <div className="mb-4">
-        <label className="block text-gray-300 text-sm mb-2">Amount (USD)</label>
+        <label className="block text-black text-sm mb-2 font-['Instrument_Sans'] font-medium">Amount (USD)</label>
         <input
           type="number"
           value={tradeAmount}
           onChange={(e) => setTradeAmount(e.target.value)}
-          className="w-full bg-gray-800 border border-gray-600 rounded-lg px-4 py-3 text-white focus:border-blue-500 focus:outline-none"
+          className="w-full bg-black/5 border border-black/20 rounded-[16px] px-4 py-3 text-black focus:border-[#64C967] focus:outline-none font-['Instrument_Sans']"
           placeholder="Enter amount..."
         />
       </div>
 
       <div className="flex gap-3">
         {!authenticated ? (
-          <Button 
+          <Button
             onClick={login}
-            className="flex-1 bg-[#64C967] hover:bg-[#54B957] text-white"
+            className="flex-1 bg-[#64C967] hover:bg-[#64C967]/90 text-black font-['Instrument_Sans'] font-bold rounded-[31px]"
           >
             <Wallet className="w-4 h-4 mr-2" />
             Connect Wallet to Trade
           </Button>
         ) : (
-          <Button 
+          <Button
             onClick={handleTrade}
             disabled={!tradeAmount || parseFloat(tradeAmount) <= 0 || isTrading}
-            className="flex-1 bg-blue-600 hover:bg-blue-700 text-white disabled:bg-gray-600 disabled:cursor-not-allowed"
+            className="flex-1 bg-black hover:bg-black/80 text-white disabled:bg-black/50 disabled:cursor-not-allowed font-['Instrument_Sans'] font-bold rounded-[31px]"
           >
             {isTrading ? 'Trading...' : `Buy ${tradeSide.toUpperCase()} Shares`}
           </Button>
         )}
-        <Button 
-          variant="outline" 
-          className="flex-1 border-gray-600 text-gray-300 hover:bg-gray-800"
+        <Button
+          variant="outline"
+          className="flex-1 border-black/20 text-black hover:bg-black/5 font-['Instrument_Sans'] rounded-[31px]"
           onClick={() => setSelectedMarket(null)}
         >
           Cancel
         </Button>
       </div>
-      
+
       {/* Real Market Actions */}
       {market.contractData && authenticated && (
         <div className="mt-6 space-y-3">
-          <h4 className="text-sm font-medium text-gray-300">Market Actions</h4>
+          <h4 className="text-sm font-medium text-black font-['Instrument_Sans']">Market Actions</h4>
           <div className="grid grid-cols-1 gap-2">
             <Button
               onClick={handleCreateProposal}
               disabled={isCreatingProposal || market.contractData.status !== MarketStatus.OPEN}
-              className="bg-purple-600 hover:bg-purple-700 text-white disabled:bg-gray-600"
+              className="bg-[#64C967] hover:bg-[#64C967]/90 text-black disabled:bg-black/20 disabled:text-black/50 font-['Instrument_Sans'] font-bold rounded-[31px]"
             >
               {isCreatingProposal ? 'Creating...' : 'Create Proposal'}
             </Button>
-            
+
             {market.contractData.status === MarketStatus.PROPOSAL_ACCEPTED && (
               <div className="grid grid-cols-2 gap-2">
                 <Button
                   onClick={() => handleResolve(true)}
                   disabled={isResolving}
-                  className="bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-600"
+                  className="bg-[#64C967] hover:bg-[#64C967]/90 text-black disabled:bg-black/20 disabled:text-black/50 font-['Instrument_Sans'] font-bold rounded-[31px]"
                 >
                   {isResolving ? 'Resolving...' : 'Resolve YES'}
                 </Button>
                 <Button
                   onClick={() => handleResolve(false)}
                   disabled={isResolving}
-                  className="bg-red-600 hover:bg-red-700 text-white disabled:bg-gray-600"
+                  className="bg-black hover:bg-black/80 text-white disabled:bg-black/20 disabled:text-black/50 font-['Instrument_Sans'] font-bold rounded-[31px]"
                 >
                   {isResolving ? 'Resolving...' : 'Resolve NO'}
                 </Button>
@@ -1614,12 +1614,12 @@ export const MarketPage = (): JSX.Element => {
           </div>
         </div>
       )}
-      
+
       {/* Market Info for Real Markets */}
       {market.contractData && (
-        <div className="mt-4 p-3 bg-gray-800 rounded-lg border border-gray-600">
-          <h4 className="text-sm font-medium text-gray-300 mb-2">Contract Details</h4>
-          <div className="space-y-1 text-xs text-gray-400">
+        <div className="mt-4 p-3 bg-black/5 rounded-[16px] border border-black/10">
+          <h4 className="text-sm font-medium text-black mb-2 font-['Instrument_Sans']">Contract Details</h4>
+          <div className="space-y-1 text-xs text-black/60 font-['Instrument_Sans']">
             <div>Market ID: {market.contractData.id}</div>
             <div>Creator: {market.contractData.creator.slice(0, 10)}...{market.contractData.creator.slice(-6)}</div>
             <div>Status: {MarketStatus[market.contractData.status]}</div>
@@ -1634,40 +1634,40 @@ export const MarketPage = (): JSX.Element => {
 
   const ScriptInterface = () => (
     <div className="space-y-6">
-      <div className="bg-gray-900 rounded-lg p-6 border border-gray-700">
-        <h3 className="text-white font-semibold text-xl mb-4">Qlick Script Execution</h3>
-        <p className="text-gray-400 mb-4">
-          Execute the Qlick smart contract script to create quantum markets, deploy tokens, 
+      <div className="bg-white rounded-[31px] p-6 border border-black/10 shadow-lg">
+        <h3 className="text-black font-semibold text-xl mb-4 font-['Instrument_Serif']">Qlick Script Execution</h3>
+        <p className="text-black/70 mb-4 font-['Instrument_Sans']">
+          Execute the Qlick smart contract script to create quantum markets, deploy tokens,
           add liquidity, and demonstrate the full market lifecycle on Unichain Sepolia.
         </p>
-        
+
         {/* Wallet Status */}
-        <div className="mb-6 p-4 bg-gray-800 rounded-lg border border-gray-600">
+        <div className="mb-6 p-4 bg-black/5 rounded-[16px] border border-black/10">
           <div className="flex items-center justify-between">
             <div className="flex-1">
-              <h4 className="text-white font-medium mb-2">Wallet Status</h4>
+              <h4 className="text-black font-medium mb-2 font-['Instrument_Sans']">Wallet Status</h4>
               {authenticated && user?.wallet?.address ? (
                 <div className="space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="text-sm text-green-400">✅ Connected</div>
-                    <div className="text-xs text-gray-400">Unichain Sepolia</div>
+                    <div className="text-sm text-[#64C967] font-['Instrument_Sans'] font-medium">✅ Connected</div>
+                    <div className="text-xs text-black/60 font-['Instrument_Sans']">Unichain Sepolia</div>
                   </div>
-                  <div className="text-xs font-mono text-gray-300 bg-gray-700 p-2 rounded">
+                  <div className="text-xs text-black bg-white p-2 rounded-[12px] border border-black/10 font-['Instrument_Sans']">
                     {user.wallet.address}
                   </div>
                   <div className="flex items-center gap-4">
-                    <div className="text-sm">
-                      <span className="text-gray-400">Balance: </span>
-                      <span className="text-white font-medium">{parseFloat(walletBalance).toFixed(4)} ETH</span>
+                    <div className="text-sm font-['Instrument_Sans']">
+                      <span className="text-black/60">Balance: </span>
+                      <span className="text-black font-medium">{parseFloat(walletBalance).toFixed(4)} ETH</span>
                     </div>
                     <div className="flex items-center gap-2">
                       {provider && (
-                        <div className="text-xs text-green-400">
+                        <div className="text-xs text-[#64C967] font-['Instrument_Sans'] font-medium">
                           🔗 Provider Ready
                         </div>
                       )}
                       {orchestratorContract && quantumMarketContract && (
-                        <div className="text-xs text-blue-400">
+                        <div className="text-xs text-black font-['Instrument_Sans'] font-medium">
                           ⚛️ Quantum Contracts Ready
                         </div>
                       )}
@@ -1676,16 +1676,16 @@ export const MarketPage = (): JSX.Element => {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <div className="text-sm text-yellow-400">⚠️ Wallet not connected</div>
-                  <div className="text-xs text-gray-400">Connect your wallet to execute scripts</div>
+                  <div className="text-sm text-black/70 font-['Instrument_Sans']">⚠️ Wallet not connected</div>
+                  <div className="text-xs text-black/60 font-['Instrument_Sans']">Connect your wallet to execute scripts</div>
                 </div>
               )}
             </div>
             {!authenticated && (
-              <Button 
+              <Button
                 onClick={login}
                 size="sm"
-                className="bg-[#64C967] hover:bg-[#54B957] text-white"
+                className="bg-[#64C967] hover:bg-[#64C967]/90 text-black font-['Instrument_Sans'] font-bold rounded-[31px]"
               >
                 <Wallet className="w-4 h-4 mr-2" />
                 Connect Wallet
@@ -1698,29 +1698,29 @@ export const MarketPage = (): JSX.Element => {
           <Button
             onClick={() => executeQlickScript('basic')}
             disabled={isExecutingScript || !authenticated || !user?.wallet?.address || !provider || !orchestratorContract || !quantumMarketContract}
-            className="bg-green-600 hover:bg-green-700 text-white p-4 h-auto flex flex-col items-start disabled:bg-gray-600 disabled:cursor-not-allowed"
+            className="bg-[#64C967] hover:bg-[#64C967]/90 text-black p-4 h-auto flex flex-col items-start disabled:bg-black/20 disabled:text-black/50 disabled:cursor-not-allowed font-['Instrument_Sans'] font-bold rounded-[31px]"
           >
             <div className="font-semibold mb-1">
               Basic Quantum Flow {!authenticated && '🔒'}
             </div>
-            <div className="text-sm opacity-90 text-left">
-              {!authenticated 
+            <div className="text-sm opacity-80 text-left">
+              {!authenticated
                 ? 'Connect wallet to execute quantum script'
                 : 'Deploy tokens → Create quantum pool → Create decision → Trade → Settle'
               }
             </div>
           </Button>
-          
+
           <Button
             onClick={() => executeQlickScript('extended')}
             disabled={isExecutingScript || !authenticated || !user?.wallet?.address || !provider || !orchestratorContract || !quantumMarketContract}
-            className="bg-blue-600 hover:bg-blue-700 text-white p-4 h-auto flex flex-col items-start disabled:bg-gray-600 disabled:cursor-not-allowed"
+            className="bg-black hover:bg-black/80 text-white p-4 h-auto flex flex-col items-start disabled:bg-black/20 disabled:text-black/50 disabled:cursor-not-allowed font-['Instrument_Sans'] font-bold rounded-[31px]"
           >
             <div className="font-semibold mb-1">
               Extended Quantum Flow {!authenticated && '🔒'}
             </div>
-            <div className="text-sm opacity-90 text-left">
-              {!authenticated 
+            <div className="text-sm opacity-80 text-left">
+              {!authenticated
                 ? 'Connect wallet to execute quantum script'
                 : 'Create multiple quantum markets → Trade across pools → Settle all decisions'
               }
@@ -1729,25 +1729,25 @@ export const MarketPage = (): JSX.Element => {
         </div>
 
         {(scriptOutput.length > 0 || isExecutingScript) && (
-          <div className="bg-black rounded-lg p-4 border border-gray-600">
+          <div className="bg-black rounded-[16px] p-4 border border-black/10">
             <div className="flex items-center justify-between mb-3">
-              <h4 className="text-green-400 font-mono text-sm">Script Output</h4>
+              <h4 className="text-[#64C967] text-sm font-['Instrument_Sans'] font-medium">Script Output</h4>
               {isExecutingScript && (
-                <div className="flex items-center gap-2 text-yellow-400 text-sm">
-                  <div className="animate-spin w-4 h-4 border-2 border-yellow-400 border-t-transparent rounded-full"></div>
+                <div className="flex items-center gap-2 text-[#64C967] text-sm font-['Instrument_Sans']">
+                  <div className="animate-spin w-4 h-4 border-2 border-[#64C967] border-t-transparent rounded-full"></div>
                   Executing...
                 </div>
               )}
             </div>
-            <div className="font-mono text-sm space-y-1 max-h-64 overflow-y-auto">
+            <div className="text-sm space-y-1 max-h-64 overflow-y-auto font-['Instrument_Sans']">
               {scriptOutput.map((line, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className={`${
-                    line.includes('✅') ? 'text-green-400' : 
-                    line.includes('⚠️') ? 'text-yellow-400' :
-                    line.includes('🚀') || line.includes('===') ? 'text-blue-400' :
-                    'text-gray-300'
+                    line.includes('✅') ? 'text-[#64C967]' :
+                    line.includes('⚠️') ? 'text-black/70' :
+                    line.includes('🚀') || line.includes('===') ? 'text-black' :
+                    'text-black/80'
                   }`}
                 >
                   {line}
@@ -1758,47 +1758,47 @@ export const MarketPage = (): JSX.Element => {
         )}
       </div>
 
-      <div className="bg-gray-900 rounded-lg p-6 border border-gray-700">
-        <h4 className="text-white font-semibold text-lg mb-4">Quantum Markets Configuration</h4>
-        <div className="mb-4 p-3 bg-blue-900/20 border border-blue-700/50 rounded-lg">
-          <p className="text-blue-300 text-sm">
-            ⚛️ <strong>Quantum Markets</strong> enable efficient evaluation of multiple proposals for each decision, 
+      <div className="bg-white rounded-[31px] p-6 border border-black/10 shadow-lg">
+        <h4 className="text-black font-semibold text-lg mb-4 font-['Instrument_Serif']">Quantum Markets Configuration</h4>
+        <div className="mb-4 p-3 bg-[#64C967]/10 border border-[#64C967]/30 rounded-[16px]">
+          <p className="text-black/80 text-sm font-['Instrument_Sans']">
+            ⚛️ <strong>Quantum Markets</strong> enable efficient evaluation of multiple proposals for each decision,
             solving the capital efficiency problem of traditional prediction markets.
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <div>
-            <h5 className="text-gray-300 font-medium mb-2">Network</h5>
-            <p className="text-gray-400">Unichain Sepolia</p>
-            <p className="text-gray-400 font-mono text-xs">https://sepolia.unichain.org</p>
+            <h5 className="text-black font-medium mb-2 font-['Instrument_Sans']">Network</h5>
+            <p className="text-black/70 font-['Instrument_Sans']">Unichain Sepolia</p>
+            <p className="text-black/60 text-xs font-['Instrument_Sans']">https://sepolia.unichain.org</p>
           </div>
           <div>
-            <h5 className="text-gray-300 font-medium mb-2">Quantum Contracts</h5>
-            <p className="text-gray-400 text-xs">Orchestrator: {QLICK_CONFIG.QLICK_ORCHESTRATOR.slice(0, 10)}...</p>
-            <p className="text-gray-400 text-xs">Market Manager: {QLICK_CONFIG.QUANTUM_MARKET_MANAGER.slice(0, 10)}...</p>
-            <p className="text-gray-400 text-xs">Quantum Hook: {QLICK_CONFIG.QUANTUM_MARKET_HOOK.slice(0, 10)}...</p>
+            <h5 className="text-black font-medium mb-2 font-['Instrument_Sans']">Quantum Contracts</h5>
+            <p className="text-black/70 text-xs font-['Instrument_Sans']">Orchestrator: {QLICK_CONFIG.QLICK_ORCHESTRATOR.slice(0, 10)}...</p>
+            <p className="text-black/70 text-xs font-['Instrument_Sans']">Market Manager: {QLICK_CONFIG.QUANTUM_MARKET_MANAGER.slice(0, 10)}...</p>
+            <p className="text-black/70 text-xs font-['Instrument_Sans']">Quantum Hook: {QLICK_CONFIG.QUANTUM_MARKET_HOOK.slice(0, 10)}...</p>
           </div>
           <div>
-            <h5 className="text-gray-300 font-medium mb-2">Pool Parameters</h5>
-            <p className="text-gray-400">Fee: {QLICK_CONFIG.FEE} (0.3%)</p>
-            <p className="text-gray-400">Liquidity: {ethers.formatEther(QLICK_CONFIG.LIQUIDITY_DESIRED)} ETH</p>
-            <p className="text-gray-400">Tick Spacing: {QLICK_CONFIG.TICK_SPACING}</p>
+            <h5 className="text-black font-medium mb-2 font-['Instrument_Sans']">Pool Parameters</h5>
+            <p className="text-black/70 font-['Instrument_Sans']">Fee: {QLICK_CONFIG.FEE} (0.3%)</p>
+            <p className="text-black/70 font-['Instrument_Sans']">Liquidity: {ethers.formatEther(QLICK_CONFIG.LIQUIDITY_DESIRED)} ETH</p>
+            <p className="text-black/70 font-['Instrument_Sans']">Tick Spacing: {QLICK_CONFIG.TICK_SPACING}</p>
           </div>
           <div>
-            <h5 className="text-gray-300 font-medium mb-2">Market Settings</h5>
-            <p className="text-gray-400">Title: {QLICK_CONFIG.MARKET_TITLE}</p>
-            <p className="text-gray-400">Min Deposit: {QLICK_CONFIG.MIN_DEPOSIT} ETH</p>
-            <p className="text-gray-400">Swap Amount: {ethers.formatEther(QLICK_CONFIG.SWAP_AMOUNT)} ETH</p>
+            <h5 className="text-black font-medium mb-2 font-['Instrument_Sans']">Market Settings</h5>
+            <p className="text-black/70 font-['Instrument_Sans']">Title: {QLICK_CONFIG.MARKET_TITLE}</p>
+            <p className="text-black/70 font-['Instrument_Sans']">Min Deposit: {QLICK_CONFIG.MIN_DEPOSIT} ETH</p>
+            <p className="text-black/70 font-['Instrument_Sans']">Swap Amount: {ethers.formatEther(QLICK_CONFIG.SWAP_AMOUNT)} ETH</p>
           </div>
         </div>
-        <div className="mt-4 p-3 bg-gray-800 rounded-lg">
-          <p className="text-gray-400 text-xs">
-            📚 Learn more about Quantum Markets: 
-            <a 
-              href="https://www.paradigm.xyz/2025/06/quantum-markets" 
-              target="_blank" 
+        <div className="mt-4 p-3 bg-black/5 rounded-[16px] border border-black/10">
+          <p className="text-black/70 text-xs font-['Instrument_Sans']">
+            📚 Learn more about Quantum Markets:
+            <a
+              href="https://www.paradigm.xyz/2025/06/quantum-markets"
+              target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-400 hover:text-blue-300 underline ml-1"
+              className="text-[#64C967] hover:text-[#64C967]/80 underline ml-1 font-medium"
             >
               Paradigm Research Paper
             </a>
@@ -1809,16 +1809,16 @@ export const MarketPage = (): JSX.Element => {
   );
 
   return (
-    <div className="bg-black min-h-screen text-white">
+    <div className="bg-[#64C967] min-h-screen text-black">
       {/* Header */}
-      <header className="border-b border-gray-800 px-6 py-4">
+      <header className="border-b border-black/20 px-6 py-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate('/')}
-              className="text-gray-400 hover:text-white"
+              className="text-black/70 hover:text-black font-['Instrument_Sans']"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
@@ -1829,27 +1829,27 @@ export const MarketPage = (): JSX.Element => {
                 alt="Logo"
                 src="/logo(2).svg"
               />
-              <h1 className="text-xl font-bold">Qlick Markets</h1>
+              <h1 className="text-xl font-bold font-['Instrument_Serif']">Qlick Markets</h1>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 text-sm">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-gray-400">Unichain Sepolia</span>
+              <div className="w-2 h-2 bg-black rounded-full"></div>
+              <span className="text-black/70 font-['Instrument_Sans']">Unichain Sepolia</span>
             </div>
-            
+
             {/* Wallet Connection */}
             <div className="flex items-center gap-3">
               {!ready ? (
-                <Button disabled size="sm" className="bg-gray-700">
+                <Button disabled size="sm" className="bg-black/20 text-black font-['Instrument_Sans'] rounded-[31px]">
                   <span className="text-xs">Loading...</span>
                 </Button>
               ) : !authenticated ? (
-                <Button 
+                <Button
                   onClick={login}
                   size="sm"
-                  className="bg-[#64C967] hover:bg-[#54B957] text-white"
+                  className="bg-black hover:bg-black/80 text-white font-['Instrument_Sans'] rounded-[31px]"
                 >
                   <Wallet className="w-4 h-4 mr-2" />
                   <span className="text-xs">Connect Wallet</span>
@@ -1857,10 +1857,10 @@ export const MarketPage = (): JSX.Element => {
               ) : (
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <div className="text-xs text-gray-400">Connected</div>
-                    <div className="text-xs font-mono text-white">
-                      {user?.wallet?.address ? 
-                        `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` : 
+                    <div className="text-xs text-black/70 font-['Instrument_Sans']">Connected</div>
+                    <div className="text-xs text-black font-['Instrument_Sans']">
+                      {user?.wallet?.address ?
+                        `${user.wallet.address.slice(0, 6)}...${user.wallet.address.slice(-4)}` :
                         user?.email?.address || 'Account'
                       }
                     </div>
@@ -1871,7 +1871,7 @@ export const MarketPage = (): JSX.Element => {
                         variant="ghost"
                         size="sm"
                         onClick={() => window.open(`https://sepolia.uniscan.xyz/address/${user.wallet?.address}`, '_blank')}
-                        className="text-gray-400 hover:text-white p-2"
+                        className="text-black/70 hover:text-black p-2"
                       >
                         <ExternalLink className="w-4 h-4" />
                       </Button>
@@ -1880,7 +1880,7 @@ export const MarketPage = (): JSX.Element => {
                       variant="ghost"
                       size="sm"
                       onClick={logout}
-                      className="text-gray-400 hover:text-white p-2"
+                      className="text-black/70 hover:text-black p-2"
                     >
                       <User className="w-4 h-4" />
                     </Button>
@@ -1893,7 +1893,7 @@ export const MarketPage = (): JSX.Element => {
       </header>
 
       {/* Navigation Tabs */}
-      <div className="border-b border-gray-800">
+      <div className="border-b border-black/20">
         <div className="max-w-7xl mx-auto px-6">
           <nav className="flex gap-8">
             {[
@@ -1904,10 +1904,10 @@ export const MarketPage = (): JSX.Element => {
               <button
                 key={id}
                 onClick={() => setActiveTab(id as any)}
-                className={`flex items-center gap-2 py-4 px-2 border-b-2 transition-colors ${
+                className={`flex items-center gap-2 py-4 px-2 border-b-2 transition-colors font-['Instrument_Sans'] ${
                   activeTab === id
-                    ? 'border-blue-500 text-white'
-                    : 'border-transparent text-gray-400 hover:text-white'
+                    ? 'border-black text-black'
+                    : 'border-transparent text-black/70 hover:text-black'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -1924,14 +1924,14 @@ export const MarketPage = (): JSX.Element => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold">Markets</h2>
+                <h2 className="text-2xl font-bold font-['Instrument_Serif'] text-black">Markets</h2>
                 <div className="flex gap-2">
                   <Button
                     onClick={() => fetchRealMarkets()}
                     disabled={isLoadingMarkets || !quantumMarketContract}
                     size="sm"
                     variant="outline"
-                    className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                    className="border-black/20 text-black hover:bg-black/5 font-['Instrument_Sans'] rounded-[31px]"
                   >
                     {isLoadingMarkets ? 'Loading...' : 'Refresh'}
                   </Button>
@@ -1941,9 +1941,9 @@ export const MarketPage = (): JSX.Element => {
               
               {/* Debug Info */}
               {authenticated && quantumMarketContract && (
-                <div className="mb-6 p-4 bg-gray-800 rounded-lg border border-gray-600">
-                  <h3 className="text-sm font-medium text-gray-300 mb-2">Debug Info</h3>
-                  <div className="text-xs text-gray-400 space-y-1">
+                <div className="mb-6 p-4 bg-black/5 rounded-[16px] border border-black/10">
+                  <h3 className="text-sm font-medium text-black mb-2 font-['Instrument_Sans']">Debug Info</h3>
+                  <div className="text-xs text-black/60 space-y-1 font-['Instrument_Sans']">
                     <div>Contract: {quantumMarketContract.target.toString()}</div>
                     <div>Connected: {authenticated ? 'Yes' : 'No'}</div>
                     <div>Real Markets Found: {realMarkets.length}</div>
@@ -1963,17 +1963,17 @@ export const MarketPage = (): JSX.Element => {
                           }
                         }}
                         size="sm"
-                        className="bg-blue-600 hover:bg-blue-700 text-white text-xs"
+                        className="bg-black hover:bg-black/80 text-white text-xs font-['Instrument_Sans'] font-bold rounded-[31px]"
                       >
                         Check Next ID
                       </Button>
-                      
+
                       <Button
                         onClick={async () => {
                           if (quantumMarketContract) {
                             const testIds = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
                             const results = [];
-                            
+
                             for (const id of testIds) {
                               try {
                                 const decision = await quantumMarketContract.decisions(id);
@@ -1986,13 +1986,13 @@ export const MarketPage = (): JSX.Element => {
                                 results.push(`ID ${id}: Error - ${error}`);
                               }
                             }
-                            
+
                             console.log('Decision scan results:', results);
                             alert(`Found decisions:\n${results.join('\n')}`);
                           }
                         }}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white text-xs"
+                        className="bg-[#64C967] hover:bg-[#64C967]/90 text-black text-xs font-['Instrument_Sans'] font-bold rounded-[31px]"
                       >
                         Scan Decisions
                       </Button>
@@ -2004,8 +2004,8 @@ export const MarketPage = (): JSX.Element => {
               {/* Real Markets Section */}
               {realMarkets.length > 0 && (
                 <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-green-400 mb-4 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2 font-['Instrument_Sans']">
+                    <div className="w-2 h-2 bg-[#64C967] rounded-full"></div>
                     On-Chain Quantum Markets ({realMarkets.length})
                   </h3>
                   <div className="space-y-4">
@@ -2015,11 +2015,11 @@ export const MarketPage = (): JSX.Element => {
                   </div>
                 </div>
               )}
-              
+
               {/* Mock Markets Section */}
               <div>
-                <h3 className="text-lg font-semibold text-blue-400 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2 font-['Instrument_Sans']">
+                  <div className="w-2 h-2 bg-black rounded-full"></div>
                   Demo Markets ({markets.length})
                 </h3>
               <div className="space-y-4">
@@ -2031,20 +2031,20 @@ export const MarketPage = (): JSX.Element => {
               
               {isLoadingMarkets && (
                 <div className="flex items-center justify-center py-8">
-                  <div className="animate-spin w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full"></div>
-                  <span className="ml-3 text-gray-400">Loading markets...</span>
+                  <div className="animate-spin w-8 h-8 border-2 border-[#64C967] border-t-transparent rounded-full"></div>
+                  <span className="ml-3 text-black/60 font-['Instrument_Sans']">Loading markets...</span>
                 </div>
               )}
             </div>
-            
+
             <div className="lg:col-span-1">
               {selectedMarket ? (
                 <TradingInterface market={selectedMarket} />
               ) : (
-                <div className="bg-gray-900 rounded-lg p-6 border border-gray-700 text-center">
-                  <TrendingUp className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                  <h3 className="text-gray-400 font-medium mb-2">Select a Market</h3>
-                  <p className="text-gray-500 text-sm">
+                <div className="bg-white rounded-[31px] p-6 border border-black/10 text-center shadow-lg">
+                  <TrendingUp className="w-12 h-12 text-black/40 mx-auto mb-4" />
+                  <h3 className="text-black/70 font-medium mb-2 font-['Instrument_Sans']">Select a Market</h3>
+                  <p className="text-black/60 text-sm font-['Instrument_Sans']">
                     Click on any market to start trading
                   </p>
                 </div>
@@ -2056,7 +2056,7 @@ export const MarketPage = (): JSX.Element => {
         {activeTab === 'positions' && (
           <div>
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">My Positions</h2>
+              <h2 className="text-2xl font-bold font-['Instrument_Serif'] text-black">My Positions</h2>
               <Button
                 onClick={async () => {
                   setIsLoadingPositions(true);
@@ -2067,7 +2067,7 @@ export const MarketPage = (): JSX.Element => {
                 disabled={isLoadingPositions || !quantumMarketContract || !user?.wallet?.address}
                 size="sm"
                 variant="outline"
-                className="border-gray-600 text-gray-300 hover:bg-gray-800"
+                className="border-black/20 text-black hover:bg-black/5 font-['Instrument_Sans'] rounded-[31px]"
               >
                 {isLoadingPositions ? 'Loading...' : 'Refresh'}
               </Button>
@@ -2076,39 +2076,39 @@ export const MarketPage = (): JSX.Element => {
             {/* Real Positions Section */}
             {realPositions.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-lg font-semibold text-green-400 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2 font-['Instrument_Sans']">
+                  <div className="w-2 h-2 bg-[#64C967] rounded-full"></div>
                   On-Chain Positions ({realPositions.length})
                 </h3>
                 <div className="space-y-4">
                   {realPositions.map((position, index) => {
-                    const market = realMarkets.find(m => m.id === position.marketId) || 
+                    const market = realMarkets.find(m => m.id === position.marketId) ||
                                    { title: `Market #${position.marketId}`, contractData: { id: Number(position.marketId) } };
                     return (
-                      <div key={`real-${index}`} className="bg-gray-900 rounded-lg p-6 border border-gray-700">
+                      <div key={`real-${index}`} className="bg-white rounded-[31px] p-6 border border-black/10 shadow-lg">
                         <div className="flex justify-between items-start mb-4">
                           <div>
                             <div className="flex items-center gap-2 mb-2">
-                              <h3 className="text-white font-semibold">{market.title}</h3>
-                              <span className="inline-block px-2 py-1 bg-green-900 text-green-300 text-xs rounded">
+                              <h3 className="text-black font-semibold font-['Instrument_Serif']">{market.title}</h3>
+                              <span className="inline-block px-3 py-1 bg-[#64C967] text-black text-xs rounded-[16px] font-['Instrument_Sans'] font-medium">
                                 ON-CHAIN
                               </span>
                             </div>
-                            <div className="flex items-center gap-4 mt-2 text-sm">
-                              <span className={`px-2 py-1 rounded text-xs ${
-                                position.side === 'yes' 
-                                  ? 'bg-green-900 text-green-300' 
-                                  : 'bg-red-900 text-red-300'
+                            <div className="flex items-center gap-4 mt-2 text-sm font-['Instrument_Sans']">
+                              <span className={`px-2 py-1 rounded-[12px] text-xs font-medium ${
+                                position.side === 'yes'
+                                  ? 'bg-[#64C967] text-black'
+                                  : 'bg-black text-white'
                               }`}>
                                 {position.side.toUpperCase()}
                               </span>
-                              <span className="text-gray-400">{position.shares.toFixed(4)} ETH deposited</span>
-                              <span className="text-gray-400">Avg: {formatPrice(position.avgPrice)}</span>
+                              <span className="text-black/60">{position.shares.toFixed(4)} ETH deposited</span>
+                              <span className="text-black/60">Avg: {formatPrice(position.avgPrice)}</span>
                             </div>
                           </div>
                           <div className="text-right">
-                            <div className="text-white font-semibold">{formatPrice(position.currentValue)}</div>
-                            <div className={`text-sm ${position.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                            <div className="text-black font-semibold font-['Instrument_Sans']">{formatPrice(position.currentValue)}</div>
+                            <div className={`text-sm font-['Instrument_Sans'] ${position.pnl >= 0 ? 'text-[#64C967]' : 'text-black/70'}`}>
                               {position.pnl >= 0 ? '+' : ''}{formatPrice(position.pnl)}
                             </div>
                           </div>
@@ -2119,37 +2119,37 @@ export const MarketPage = (): JSX.Element => {
                 </div>
               </div>
             )}
-            
+
             {/* Mock Positions Section */}
             {positions.length > 0 && (
               <div>
-                <h3 className="text-lg font-semibold text-blue-400 mb-4 flex items-center gap-2">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <h3 className="text-lg font-semibold text-black mb-4 flex items-center gap-2 font-['Instrument_Sans']">
+                  <div className="w-2 h-2 bg-black rounded-full"></div>
                   Demo Positions ({positions.length})
                 </h3>
             <div className="space-y-4">
               {positions.map((position, index) => {
                 const market = markets.find(m => m.id === position.marketId);
                 return (
-                      <div key={`mock-${index}`} className="bg-gray-900 rounded-lg p-6 border border-gray-700">
+                      <div key={`mock-${index}`} className="bg-white rounded-[31px] p-6 border border-black/10 shadow-lg">
                     <div className="flex justify-between items-start mb-4">
                       <div>
-                        <h3 className="text-white font-semibold">{market?.title}</h3>
-                        <div className="flex items-center gap-4 mt-2 text-sm">
-                          <span className={`px-2 py-1 rounded text-xs ${
-                            position.side === 'yes' 
-                              ? 'bg-green-900 text-green-300' 
-                              : 'bg-red-900 text-red-300'
+                        <h3 className="text-black font-semibold font-['Instrument_Serif']">{market?.title}</h3>
+                        <div className="flex items-center gap-4 mt-2 text-sm font-['Instrument_Sans']">
+                          <span className={`px-2 py-1 rounded-[12px] text-xs font-medium ${
+                            position.side === 'yes'
+                              ? 'bg-[#64C967] text-black'
+                              : 'bg-black text-white'
                           }`}>
                             {position.side.toUpperCase()}
                           </span>
-                          <span className="text-gray-400">{position.shares} shares</span>
-                          <span className="text-gray-400">Avg: {formatPrice(position.avgPrice)}</span>
+                          <span className="text-black/60">{position.shares} shares</span>
+                          <span className="text-black/60">Avg: {formatPrice(position.avgPrice)}</span>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="text-white font-semibold">{formatPrice(position.currentValue)}</div>
-                        <div className={`text-sm ${position.pnl >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                        <div className="text-black font-semibold font-['Instrument_Sans']">{formatPrice(position.currentValue)}</div>
+                        <div className={`text-sm font-['Instrument_Sans'] ${position.pnl >= 0 ? 'text-[#64C967]' : 'text-black/70'}`}>
                           {position.pnl >= 0 ? '+' : ''}{formatPrice(position.pnl)}
                         </div>
                       </div>
@@ -2163,22 +2163,22 @@ export const MarketPage = (): JSX.Element => {
             
             {/* No positions message */}
             {realPositions.length === 0 && positions.length === 0 && !isLoadingPositions && (
-              <div className="bg-gray-900 rounded-lg p-8 border border-gray-700 text-center">
-                <DollarSign className="w-12 h-12 text-gray-600 mx-auto mb-4" />
-                <h3 className="text-gray-400 font-medium mb-2">No Positions Found</h3>
-                <p className="text-gray-500 text-sm">
-                  {!authenticated 
+              <div className="bg-white rounded-[31px] p-8 border border-black/10 text-center shadow-lg">
+                <DollarSign className="w-12 h-12 text-black/40 mx-auto mb-4" />
+                <h3 className="text-black/70 font-medium mb-2 font-['Instrument_Sans']">No Positions Found</h3>
+                <p className="text-black/60 text-sm font-['Instrument_Sans']">
+                  {!authenticated
                     ? 'Connect your wallet to view your positions'
                     : 'You haven\'t taken any positions yet. Start trading to see your positions here.'
                   }
                 </p>
               </div>
             )}
-            
+
             {isLoadingPositions && (
               <div className="flex items-center justify-center py-8">
-                <div className="animate-spin w-8 h-8 border-2 border-blue-400 border-t-transparent rounded-full"></div>
-                <span className="ml-3 text-gray-400">Loading positions...</span>
+                <div className="animate-spin w-8 h-8 border-2 border-[#64C967] border-t-transparent rounded-full"></div>
+                <span className="ml-3 text-black/60 font-['Instrument_Sans']">Loading positions...</span>
               </div>
             )}
           </div>

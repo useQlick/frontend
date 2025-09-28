@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "../components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
 import { WaitlistPage } from "./waitlistPage";
@@ -6,8 +6,10 @@ import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export const LandingPage = (): JSX.Element => {
+  const navigate = useNavigate();
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isWaitlistOpen, setIsWaitlistOpen] = useState(false);
   const pinRef = useRef<HTMLDivElement>(null);
@@ -286,7 +288,10 @@ export const LandingPage = (): JSX.Element => {
 
           {/* Bottom-right CTA */}
           <div className="absolute right-4 sm:right-6 bottom-4 sm:bottom-6 pointer-events-auto">
-            <Button className="px-6 py-3 bg-black rounded-[31px] hover:bg-black/80 transition-colors">
+            <Button 
+              onClick={() => navigate('/markets')}
+              className="px-6 py-3 bg-black rounded-[31px] hover:bg-black/80 transition-colors"
+            >
               <span className="font-['Instrument_Sans'] font-bold text-white text-sm tracking-[0] leading-normal">
                 Get Started →
               </span>

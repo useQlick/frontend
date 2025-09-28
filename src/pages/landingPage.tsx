@@ -5,6 +5,7 @@ import { WaitlistPage } from "./waitlistPage";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { ChevronDown } from "lucide-react";
 
 export const LandingPage = (): JSX.Element => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
@@ -121,10 +122,8 @@ export const LandingPage = (): JSX.Element => {
   };
 
   const navigationItems = [
-    { label: "Features", id: "features" },
     { label: "Home", id: "home" },
-    { label: "About Us", id: "about" },
-    { label: "Contact", id: "contact" },
+    { label: "Market", id: "about" },
   ];
 
   return (
@@ -142,21 +141,7 @@ export const LandingPage = (): JSX.Element => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center space-x-8">
-            {navigationItems.map((item, index) => (
-              <React.Fragment key={item.id}>
-                <a
-                  href={`#${item.id}`}
-                  className="font-['Instrument_Sans'] font-bold text-white text-xs tracking-[0] leading-normal cursor-pointer hover:opacity-80 transition-opacity"
-                >
-                  {item.label}
-                </a>
-                {index < navigationItems.length - 1 && (
-                  <div className="w-[3px] h-[3px] bg-[#d9d9d9] rounded-full" />
-                )}
-              </React.Fragment>
-            ))}
-          </nav>
+          
 
           {/* CTA Button */}
           <div className="flex-shrink-0">
@@ -203,29 +188,25 @@ export const LandingPage = (): JSX.Element => {
             <div className="text-center lg:text-left mb-8 lg:mb-0">
               <h1 className="font-['Instrument_Serif'] font-normal text-4xl sm:text-6xl lg:text-8xl xl:text-9xl tracking-[0] leading-tight lg:leading-[87.1px] mb-3 lg:mb-8">
                 <span className="text-white block">
-                  Why pick one market when you can
+                  Why pick one market
+                </span>
+                <span className="text-white block">
+                when you can
                 </span>
                 <span className="text-white block">
                    <span className="text-[#64C967]">Qlick</span> them all?
                 </span>
               </h1>
-              
-              <div className="lg:hidden">
-                <Button className="px-6 py-3 bg-[#64C967] rounded-[31px] hover:bg-[#50C953] transition-colors">
-                  <span className="font-['Instrument_Sans'] font-bold text-black text-sm tracking-[0] leading-normal">
-                    Get Started →
-                  </span>
-                </Button>
-              </div>
             </div>
 
-            {/* Desktop CTA */}
+            {/* Desktop Scroll Indicator */}
             <div className="hidden lg:block">
-              <Button className="px-6 py-3 bg-[#64C967] rounded-[31px] hover:bg-[#50C953] transition-colors">
-                <span className="font-['Instrument_Sans'] font-bold text-black text-sm tracking-[0] leading-normal">
-                  Get Started →
+              <div className="flex flex-col items-center">
+                <ChevronDown className="w-8 h-8 text-white mb-2" />
+                <span className="font-['Instrument_Sans'] font-medium text-white text-xs tracking-[0] leading-normal opacity-80">
+                  Scroll Down
                 </span>
-              </Button>
+              </div>
             </div>
           </div>
         </div>
